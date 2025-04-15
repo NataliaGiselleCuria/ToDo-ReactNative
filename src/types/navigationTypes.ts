@@ -4,7 +4,7 @@
 export type RootStackParamList = {
     Auth: undefined;
     App: undefined;
-    Drawer: undefined;
+    CreateList: undefined;
 };
 
 // AuthStack (pantallas de autenticación)
@@ -13,14 +13,31 @@ export type AuthStackParamList = {
 };
 
 // AppStack (stack interno con Home y subpantallas)
-export type AppStackParamList = {
-    Home: undefined;
-
+export type AppStackParamList = {   
+    Drawer: undefined;
 };
 
 // Navegación lateral (Drawer)
 export type DrawerParamList = {
-    Home: undefined;
+    Main: undefined;
     Profile: undefined;
+    Settings: undefined;
+    // Home:undefined;
 };
 
+// Navegación del footer
+export type FooterTabParamList = {
+    Home: undefined;
+    Calendar: undefined;
+    CreateListRedirect: undefined;
+    Notifications: undefined;
+    Contacts: undefined;
+};
+
+// Navegación del footer
+export type CreateListParamList = {
+    CreateList: undefined;
+    StepOne: undefined ;
+    StepTwo: undefined;
+    StepThree: undefined;
+};

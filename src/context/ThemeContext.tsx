@@ -1,33 +1,34 @@
 import React, { createContext, useContext, useState } from "react";
-import { DefaultTheme, DarkTheme  } from '../styles/theme';
+import { themes } from '../styles/theme';
+import { ThemeId } from "../types/types";
 
 interface ThemeContextType {
-    theme: typeof DefaultTheme;
-    isDarkMode: boolean;
-    toggleTheme: () => void;
+    theme: typeof themes.default;
+    currentThemeId: ThemeId;
+    setThemeById: (id: ThemeId) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-    theme: DefaultTheme,
-    isDarkMode: false,
-    toggleTheme: () => {},
+    theme: themes.default,
+    currentThemeId: 'default',
+    setThemeById: () => { },
 });
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const [theme, setTheme] = useState(DefaultTheme); // Solo usamos Default por ahora
+    const [currentThemeId, setCurrentThemeId] = useState<ThemeId>('default');
+    const theme = themes[currentThemeId]; // Solo usamos Default por ahora
 
-    const toggleTheme = () => {
-        setIsDarkMode((prev) => !prev);
-        setTheme((prevTheme) => (prevTheme === DefaultTheme ? DarkTheme : DefaultTheme));
+    const setThemeById = (id: ThemeId) => {
+        if (themes[id]) {
+            setCurrentThemeId(id);
+        }
     };
 
     return (
-        <ThemeContext.Provider value={{ theme, isDarkMode, toggleTheme }}>
+        <ThemeContext.Provider value={{ theme, currentThemeId, setThemeById }}>
             {children}
         </ThemeContext.Provider>
     );
 };
 
-// Hook para acceder al tema en cualquier parte de la app
 export const useTheme = () => useContext(ThemeContext);
