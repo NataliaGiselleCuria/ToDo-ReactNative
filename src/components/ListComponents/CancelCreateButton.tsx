@@ -2,7 +2,7 @@ import { StyleSheet, TouchableOpacity, Animated } from 'react-native'
 import React, { useState } from 'react'
 import StyledText from '../styledComponets/StyledText'
 import { useCancelToHome } from '../../hooks/useCancelToHome';
-import { useCreateList } from '../../context/Lists/CreateListContext';
+import { useCreateList } from '../../context/lists/CreateListContext';
 import { useTheme } from '../../context/ThemeContext';
 import { Svg, Circle } from 'react-native-svg';
 import { usePressScale } from '../../hooks/usePressScale';

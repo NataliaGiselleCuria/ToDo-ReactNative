@@ -1,15 +1,25 @@
 import React from "react";
-import { StatusBar, View } from "react-native";
+import { Pressable, StatusBar, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 import { globalStyles } from "../styles/globalStyles";
 import StyledText from "../components/styledComponets/StyledText";
 import StyledContainer from "../components/styledComponets/StyledContainer";
-import { useListContext } from "../context/Lists/ListContext";
+import { useListContext } from "../context/lists/ListContext";
+import { useNavigation } from "@react-navigation/native";
+import { RootStackParamList } from "../types/navigationTypes";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { List } from "../types/types";
 
 const HomeScreen = () => {
   const { lists } = useListContext();
   const { theme } = useTheme();
   const globalStyle = globalStyles(theme);
+
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  const handlePress = (list: List) =>{
+    navigation.navigate('ViewList', { list: list });
+  }
 
   return (
     <StyledContainer>
@@ -18,10 +28,11 @@ const HomeScreen = () => {
 
       <View>
         {lists.map((list) => (
-          <View key={list.id}>
+          <TouchableOpacity key={list.id} onPress = {() => handlePress(list)}>
+            <StyledText>{list.id}</StyledText>
             <StyledText>{list.name}</StyledText>
             <StyledText>{list.description}</StyledText>
-          </View>
+          </TouchableOpacity>
         ))}
       </View>
 

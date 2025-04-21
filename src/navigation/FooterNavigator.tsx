@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
 import CalendarScreen from "../screens/CalendarScreen";
-import CreateListRedirect from "../screens/CreateList/CreateListRedirect";
+import CreateListRedirect from "../screens/createList/CreateListRedirect";
 import NotificationsScreen from "../screens/NotificationsScreen";
 import ContactsScreen from "../screens/ContactsScreen";
 
@@ -31,6 +31,7 @@ const FooterNavigator = () => {
           borderTopColor: theme.colors.backgroundTop, 
           justifyContent: "center",
           alignItems: "center",
+          
         },
       })}
     >

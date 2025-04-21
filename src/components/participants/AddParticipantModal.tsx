@@ -1,12 +1,14 @@
-import { StyleSheet, Text, TouchableOpacity, View, Button } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Button, Dimensions } from 'react-native'
 import Modal from "react-native-modal";
 import React, { useEffect, useState } from 'react'
-import { User } from '../types/types';
-import StyledInput from './styledComponets/StyledInput';
+import { User } from '../../types/types';
+import StyledInput from '../styledComponets/StyledInput';
 import { FlatList } from 'react-native-gesture-handler';
 import UsersPreview from './UsersPreview';
-import StyledContainer from './styledComponets/StyledContainer';
-import StyledButton from './styledComponets/StyledButton';
+import StyledButton from '../styledComponets/StyledButton';
+import { globalStyles } from '../../styles/globalStyles';
+import { useTheme } from '../../context/ThemeContext';
+
 
 type Props = {
     visible: boolean;
@@ -19,6 +21,8 @@ type Props = {
 const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUsers }: Props) => {
     const [search, setSearch] = useState('');
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
+      const { theme } = useTheme();
+     const gStyles = globalStyles(theme);
 
     useEffect(() => {
         setSelectedUsers(isSelectedUsers);
@@ -43,9 +47,9 @@ const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUser
     );
 
     return (
-        <Modal isVisible={visible} onBackdropPress={onClose}>
-            <View style={styles.modalOverlay}>
-                <View style={styles.modalContent}>
+        <Modal isVisible={visible} onBackdropPress={onClose} customBackdrop={<View style={{flex: 1}} />}>
+            <View style={[gStyles.modalOverlay, gStyles.shadow, {backgroundColor: theme.colors.backgroundTop}]}>
+                <View style={gStyles.modalContent}>
                     <StyledInput
                         placeholder="Buscar usuarios..."
                         value={search}
@@ -70,26 +74,13 @@ const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUser
                 </View>
             </View>
         </Modal>
+       
     )
 }
 
 export default AddParticipantModal
 
 export const styles = StyleSheet.create({
-    modalOverlay: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center', 
-    },
-
-    modalContent: {
-        width: '95%',
-        height: '90%',
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 20,
-        gap: 10,
-    },
 
     userItem: {
         flex: 1,
@@ -98,7 +89,7 @@ export const styles = StyleSheet.create({
         margin: 5,
     },
 
-    selectedUser:{
+    selectedUser: {
         backgroundColor: '#e0e0e0',
         borderRadius: 5,
     },
@@ -108,4 +99,12 @@ export const styles = StyleSheet.create({
         top: 10,
         right: 10,
     },
+
+    blur:{
+        flex: 1,
+        width: '100%',
+        height: '100%',
+        filter: 'blur(15px)',
+        backgroundColor:'white'
+    }
 });

@@ -18,7 +18,9 @@ export interface List {
     description?: string;
     createdBy: User;
     category: CategoriesList;
+    scheduleStartDate: boolean;
     startDate: Date;
+    scheduleEndDate: boolean;
     endDate?: Date;
     participants: User[];
     permissions: PermissionsOptions;
@@ -29,13 +31,21 @@ export interface List {
 }
 
 export interface Item {
+    idList:number
     id: number;
     name: string;
     subcategory?: string;
+    description?: string;
+    createdBy: User;
+    scheduleStartDate: boolean;
+    startDate: Date;
+    scheduleEndDate: boolean;
+    endDate?: Date;
+    duration?: string;
     state: ItemState;
-    assignment?: User;
-    owner: User;
-    note?: string;
+    assignment?: User[];
+    owner?: User;
+    note?: string[];
     priority?: Priority;
     image?: string;
 }
@@ -47,6 +57,13 @@ export enum CategoriesList {
     others = "otras"
 }
 
+export const categoryItemName: Record<CategoriesList, string> = {
+    [CategoriesList.shopping]: "producto",
+    [CategoriesList.gift]: "regalo",
+    [CategoriesList.task]: "tarea",
+    [CategoriesList.others]: "ítem"
+};
+
 export enum PermissionsOptions {
     onlyMe = "solo Yo",
     all = "todos",
@@ -55,8 +72,9 @@ export enum PermissionsOptions {
 
 export enum ItemState {
     notComplete = "no completado",
-    reserved= "reservado",
-    completed = "completado"
+    inProsses = "en proceso",
+    completed = "completado",
+    
 }
 
 export enum StatusList {
@@ -88,19 +106,19 @@ export interface UserPreferences {
 export type ContactStatus = 'pending' | 'accepted' | 'rejected' | 'blocked';
 
 export interface ContactRelation {
-  id: number;
-  requesterId: number; // El que envía la solicitud
-  receiverId: number;  // El que la recibe
-  status: ContactStatus;
-  blockerId?: number;// Solo presente si status === 'blocked'
-  createdAt: Date; // o Date si estás usando fechas JS
-  updatedAt: string;
+    id: number;
+    requesterId: number; // El que envía la solicitud
+    receiverId: number;  // El que la recibe
+    status: ContactStatus;
+    blockerId?: number;// Solo presente si status === 'blocked'
+    createdAt: Date; // o Date si estás usando fechas JS
+    updatedAt: string;
 }
 
 export type ContactAction =
-  | 'sendRequest'
-  | 'cancelRequest'
-  | 'acceptRequest'
-  | 'rejectRequest'
-  | 'blockUser'
-  | 'unblockUser';
+    | 'sendRequest'
+    | 'cancelRequest'
+    | 'acceptRequest'
+    | 'rejectRequest'
+    | 'blockUser'
+    | 'unblockUser';

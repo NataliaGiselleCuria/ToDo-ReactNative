@@ -1,20 +1,20 @@
 import React, { createContext, useCallback, useContext, useMemo } from "react";
-import { List } from "../../types/types";
+import { Item } from "../../types/types";
 
 interface ListContextType {
-    lists: List[];
-    addList: (newList: List) => void;
-    updateList: (id: number, updated: Partial<List>) => void;
-    deleteList: (id: number) => void;
+    items: Item[];
+    addItem: (newList: Item) => void;
+    updateItem: (id: number, updated: Partial<Item>) => void;
+    deleteItem: (id: number) => void;
 }
 
-const ListContext = createContext<ListContextType | undefined>(undefined);
+const ItemContext = createContext<ListContextType | undefined>(undefined);
 
-export const ListProvider = ({ children }: { children: React.ReactNode }) => {
-    const [lists, setLists] = React.useState<List[]>([]);
+export const ItemProvider = ({children}: {children: React.ReactNode}) => {
+    const [items, setItems] = React.useState<Item[]>([]);
 
-    const addList = (newList: List) => {
-        setLists([...lists, newList]);
+    const addItem = (newItem: Item) => {
+        setItems([...items, newItem]);
 
         //Acá lógica para guardar la lista en MySql
         // try {
@@ -26,10 +26,9 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
         // }
     }
 
-    const updateList = (id: number, updated: Partial<List>) => {
-        setLists(prevLists => prevLists.map(list => list.id === id ? { ...list, ...updated } : list));
-        console.log(lists)
-
+    const updateItem = (id: number, updated: Partial<Item>) => {
+        setItems(prevItems => prevItems.map(item => item.id === id ? {...item, ...updated} : item));
+       
         //Acá lógica para actualizar la lista en MySql
         // try {
         //     await updateListInMySQL(id, updated); // lógica de update en base
@@ -42,8 +41,8 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
         // }
     }
 
-    const deleteList = (id: number) => {
-        setLists(prevLists => prevLists.filter(list => list.id !== id));
+    const deleteItem = (id: number) => {
+        setItems(prevLists => prevLists.filter(list => list.id !== id));
 
         //Acá lógica para eliminar la lista    
         // try {
@@ -56,23 +55,23 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const contextValue = useMemo(() => ({
-        lists,
-        addList,
-        updateList,
-        deleteList,
-    }), [lists]);
+        items,
+        addItem,
+        updateItem,
+        deleteItem,
+      }), [items]);
 
-    return (
-        <ListContext.Provider value={contextValue}>
+    return(
+        <ItemContext.Provider value={contextValue}>
             {children}
-        </ListContext.Provider>
+        </ItemContext.Provider>
 
     )
 
 }
 
-export const useListContext = () => {
-    const context = useContext(ListContext);
+export const useItemContext = () => {
+    const context = useContext(ItemContext);
     if (!context) throw new Error("useListContext must be used inside ListProvider");
     return context;
-};
+  };

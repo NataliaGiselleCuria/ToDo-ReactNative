@@ -10,8 +10,8 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { AppStackParamList, DrawerParamList, RootStackParamList } from "../../types/navigationTypes";
 import StyledText from "../../components/styledComponets/StyledText";
 import StyledButton from "../../components/styledComponets/StyledButton";
-import Avatar from "../../components/Avatar";
 import { globalStyles } from "../../styles/globalStyles";
+import Avatar from "../../components/participants/Avatar";
 
 export interface DrawerItemProps {
     icon: any;

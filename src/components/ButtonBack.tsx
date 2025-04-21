@@ -1,17 +1,17 @@
-import { StyleSheet, Text, TouchableOpacity, Image, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import StyledText from './styledComponets/StyledText'
+import StyledIcon from './styledComponets/StyledIcon';
 
 type Props = {
     onPress?: () => void;
 };
 
 const ButtonBack = ({ onPress }: Props) => {
+
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.button}>
-                <Image source={require('../assets/icons-general/goBack.png')} style={styles.icon} />
-                <StyledText>Volver</StyledText>
+                <StyledIcon src={require('../assets/icons-general/goBack.png')}/>
             </View>
         </TouchableOpacity>
     )
@@ -23,12 +23,8 @@ const styles = StyleSheet.create({
     button: {
         flexDirection: 'row',
         alignItems: 'center',
-        width: 60,
+        width: 'auto',
         height: 65,
-        justifyContent: 'center'
-    },
-    icon: {
-        width: 24,
-        height: 24,
-    },
+        justifyContent: 'flex-start',
+    }
 });

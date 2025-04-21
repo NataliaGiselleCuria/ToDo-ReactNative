@@ -1,7 +1,8 @@
 import { Image, StyleSheet, View } from 'react-native'
 import React from 'react'
 import Svg, { Circle } from 'react-native-svg';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
+import { globalStyles } from '../../styles/globalStyles';
 
 type Props = {
     avatarUser: any
@@ -9,10 +10,11 @@ type Props = {
 
 const Avatar: React.FC<Props> = ({ avatarUser }) => {
     const { theme } = useTheme();
+    const gStyles = globalStyles(theme);
     
     return (
-        <View style={styles.wrapper}>
-            <Svg height="80" width="80" style={styles.circle}>
+        <View style={[styles.wrapper, gStyles.shadow]}>
+            <Svg height="80" width="80" style={[styles.circle, gStyles.shadow]}>
                 <Circle
                     cx="40"
                     cy="40"
@@ -26,7 +28,7 @@ const Avatar: React.FC<Props> = ({ avatarUser }) => {
                     fill="none"
                 />
             </Svg>
-            <Image source={avatarUser} style={styles.avatar} />
+            <Image source={avatarUser} style={[styles.avatar]} />
         </View>
     )
 };
@@ -38,6 +40,9 @@ const styles = StyleSheet.create({
         position: 'relative',
         width: 80,
         height: 80,
+        backgroundColor: 'white',
+        borderRadius: 40,
+        overflow: 'hidden',
     },
     circle: {
         position: 'absolute',
@@ -46,7 +51,9 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        objectFit:'contain'
+        objectFit:'contain',
+        backgroundColor: 'white',
+
     },
 });
 

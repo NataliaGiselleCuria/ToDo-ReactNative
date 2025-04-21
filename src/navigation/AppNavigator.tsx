@@ -5,17 +5,20 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { RootStackParamList, DrawerParamList, AuthStackParamList, AppStackParamList } from "../types/navigationTypes";
 import { globalStyles } from "../styles/globalStyles";
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
-import { ListProvider } from "../context/Lists/ListContext";
+import { ListProvider } from "../context/lists/ListContext";
+import { ItemProvider } from "../context/items/ItemContext";
 
 //Importar pantallas
-import LoginScreen from "../screens/LoginScreen";
+import LoginScreen from "../screens/auth/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import CustomDrawer from './Drawer/CustomDrawer';
+import CustomDrawer from './drawer/CustomDrawer';
 import SettingsScreen from "../screens/SettingsScreen";
 
 //importar navegadores
 import CreateListNavigator from "./CreateListNavigator";
 import FooterNavigator from "./FooterNavigator";
+import ViewList from "../screens/viewList/ViewList";
+import { CreateItemProvider } from "../context/items/CreateItemContext";
 
 //Crear navegadores
 const AuthStack = createStackNavigator<AuthStackParamList>();
@@ -71,11 +74,14 @@ const DrawerNav = () => {
 const RootStackNav = () => {
   return (
     <NavigationContainer>
-      <RootStack.Navigator screenOptions={{ headerShown: false }}>
-        <RootStack.Screen name="Auth" component={AuthStackNav} />
-        <RootStack.Screen name="App" component={AppStackNav} />
-        <RootStack.Screen name="CreateList" component={CreateListNavigator} />
-      </RootStack.Navigator>
+      <CreateItemProvider>
+        <RootStack.Navigator screenOptions={{ headerShown: false }}>
+          <RootStack.Screen name="Auth" component={AuthStackNav} />
+          <RootStack.Screen name="App" component={AppStackNav} />
+          <RootStack.Screen name="CreateList" component={CreateListNavigator} />
+          <RootStack.Screen name="ViewList" component={ViewList} />
+        </RootStack.Navigator>
+      </CreateItemProvider>
     </NavigationContainer>
   );
 
@@ -85,7 +91,9 @@ const AppNavigator = () => {
   return (
     <ThemeProvider>
       <ListProvider>
+        <ItemProvider>
         <RootStackNav />
+        </ItemProvider>
       </ListProvider>
     </ThemeProvider>
   );

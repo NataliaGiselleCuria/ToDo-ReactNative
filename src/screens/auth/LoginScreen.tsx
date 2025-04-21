@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from "react-native";
-import StyledText from "../components/styledComponets/StyledText";
-import StyledContainer from "../components/styledComponets/StyledContainer";
-import StyledInput from "../components/styledComponets/StyledInput";
-import StyledButton from "../components/styledComponets/StyledButton";
+import StyledContainer from "../../components/styledComponets/StyledContainer";
+import StyledText from "../../components/styledComponets/StyledText";
+import StyledInput from "../../components/styledComponets/StyledInput";
+import StyledButton from "../../components/styledComponets/StyledButton";
+
 
 export type LoginScreenProps = {
   navigation: any;
@@ -21,10 +22,10 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
   };
 
   return (
-    <StyledContainer centered>
-      <Image source={require("../assets/logo.webp")} style={styles.logo} />
+    <StyledContainer centered style={styles.container}>
+      <Image source={require("../../assets/logo.webp")} style={styles.logo} />
 
-      <StyledText>Bienvenidos</StyledText>
+      <StyledText size="lg" weight="bold">Bienvenidos</StyledText>
 
       <StyledInput
         placeholder="Email"
@@ -48,10 +49,12 @@ const LoginScreen = ({ navigation }: LoginScreenProps) => {
 };
 
 const styles = StyleSheet.create({
+  container:{
+    gap:20
+  },
   logo: {
     width: 150,
     height: 150,
-    marginBottom: 20,
   },
 
 });

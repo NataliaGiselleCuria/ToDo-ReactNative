@@ -1,15 +1,12 @@
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-
-import StyledText from '../styledComponets/StyledText'
 import { useTheme } from '../../context/ThemeContext';
-
 import { PermissionsOptions, User } from '../../types/types';
-import AddParticipantModal from '../AddParticipantModal';
-import OptionsListLayout from './OptionsListLayout';
+import StyledText from '../styledComponets/StyledText'
 
 import { loggedUser, otherUsers, userContacts } from '../../services/mockUsers' //user de prueba
-import ParticipantsList from './ParticipantsList';
+import ParticipantsList from '../participants/ParticipantsList';
+import OptionsListLayout from '../OptionsListLayout';
 
 type StepTwoProps = {
   onChange: (data: { participants: User[]; permissions: PermissionsOptions }) => void;

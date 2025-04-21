@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,  
     paddingHorizontal: 15,
-    marginBottom: 15,
     fontSize: 16,
     fontFamily: "Roboto-Regular",
   },

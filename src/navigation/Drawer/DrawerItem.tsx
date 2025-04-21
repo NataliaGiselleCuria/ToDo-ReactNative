@@ -4,6 +4,7 @@ import Animated, { useSharedValue, withTiming, useAnimatedStyle } from "react-na
 import StyledText from "../../components/styledComponets/StyledText";
 import { useTheme } from "../../context/ThemeContext";
 import { DrawerParamList } from "../../types/navigationTypes";
+import StyledIcon from "../../components/styledComponets/StyledIcon";
 
 export interface DrawerItemProps {
     icon: any;
@@ -50,15 +51,7 @@ const DrawerItem: React.FC<DrawerItemProps> = ({ icon, label, navigateTo, naviga
         ]}
       />
       <View style={styles.content}>
-        <Image
-          source={icon}
-          style={{
-            width: 24,
-            height: 24,
-            tintColor: theme.colors.text,
-            marginRight: 10,
-          }}
-        />
+        <StyledIcon src={icon} style={{ marginRight: 10,}} />
         <StyledText size="md">{label}</StyledText>
       </View>
     </Pressable>
