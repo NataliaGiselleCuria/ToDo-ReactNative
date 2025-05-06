@@ -4,19 +4,27 @@ import { useTheme } from "../../context/ThemeContext";
 
 type Props = {
     children: React.ReactNode;
-    size?: "sm" | "md" | "lg" | "xlg";
+    size?: "xsm" | "sm" | "md" | "lg" | "xlg";
     weight?: "light" | "regular" | "medium" | "bold";
+    type?: "primary" | "secondary" | "button"
     style?: TextStyle;
 };
 
-const StyledText = ({ children, size = "md", weight = "regular", style }: Props) => {
+const StyledText = ({ children, size = "md", weight = "regular", type = "primary", style }: Props) => {
     const { theme } = useTheme();
 
+    const fontTypeMap = {
+        primary: theme.colors.text,
+        secondary: theme.colors.textSecondary,
+        button: theme.colors.cardText
+    };
+
     const fontSizeMap = {
+        xsm: 14,
         sm: 16,
         md: 18,
         lg: 24,
-        xlg:32
+        xlg:35
     };
 
     const fontFamilyMap = {
@@ -29,9 +37,10 @@ const StyledText = ({ children, size = "md", weight = "regular", style }: Props)
     return (
         <Text
             style={{
-                color: theme.colors.text,
+                color: fontTypeMap[type],
                 fontSize: fontSizeMap[size],
                 fontFamily: fontFamilyMap[weight],
+                letterSpacing: 0.5,
                 ...style,
             }}
         >

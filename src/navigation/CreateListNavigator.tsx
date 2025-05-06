@@ -1,6 +1,6 @@
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import CreateListScreen from "../screens/createList/CreateListScreen";
+import CreateListScreen from "../screens/list/CreateListScreen";
 import { CreateListProvider } from "../context/lists/CreateListContext";
 
 const Stack = createStackNavigator();

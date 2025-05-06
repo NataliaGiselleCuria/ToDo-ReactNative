@@ -1,31 +1,38 @@
 import React from "react";
-import { TextInput, TextInputProps, StyleSheet } from "react-native";
+import { TextInput, TextInputProps, StyleSheet, DimensionValue } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { globalStyles } from "../../styles/globalStyles";
 
-const StyledInput: React.FC<TextInputProps> = (props) => {
+type Props = {
+  width?: DimensionValue,
+  centered?: boolean
+} & TextInputProps;
+
+const StyledInput: React.FC<Props> = ({ width='100%', centered=false,  ...rest }: Props) => {
   const { theme } = useTheme();
   const gStyles = globalStyles(theme);
 
   return (
     <TextInput
-      {...props}
+      {...rest}
       style={[styles.input, { 
         color: theme.colors.text,
         backgroundColor: theme.colors.background,
         shadowColor: theme.colors.text,
         boxShadow: '5 2 2' + theme.colors.text,
         borderColor: theme.colors.line,
-      }, props.style, gStyles.shadow]}
-      placeholderTextColor={theme.colors.text + "88"}
-      autoFocus={true}
+        width: width,
+        alignSelf: centered ? 'center' : 'flex-start',
+      }, rest.style, gStyles.shadow]}
+      placeholderTextColor={theme.colors.textSecondary}
+      autoFocus={false}
     />
   );
 };
 
 const styles = StyleSheet.create({
   input: {
-    width: "80%",
+    alignContent:'center',
     height: 50,
     borderWidth: 1,
     borderRadius: 10,  

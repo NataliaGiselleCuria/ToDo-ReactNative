@@ -6,9 +6,11 @@ import { useCreateList } from '../../context/lists/CreateListContext';
 import { useTheme } from '../../context/ThemeContext';
 import { Svg, Circle } from 'react-native-svg';
 import { usePressScale } from '../../hooks/usePressScale';
+import { globalStyles } from '../../styles/globalStyles';
 
 const CancelCreateButton = () => {
     const { theme } = useTheme();
+    const gStyles = globalStyles(theme);
     const { scaleStyle, handlePressIn, handlePressOut } = usePressScale();
     const cancelToHome = useCancelToHome();
     const { resetListData } = useCreateList();
@@ -20,7 +22,7 @@ const CancelCreateButton = () => {
 
     return (
         <Animated.View style={[styles.container, scaleStyle]}>
-            <Svg height="110" width="110" style={styles.svg}>
+            <Svg height="110" width="110" style={[styles.svg]}>
                 <Circle
                     cx="100"
                     cy="10"
@@ -47,27 +49,27 @@ export default CancelCreateButton;
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        zIndex: 1,
+        zIndex: 5,
         top: 0,
         right: 0,
         width: 120,
-        height: 140,
+        height: 117,
         alignItems: 'center',
         justifyContent: 'center',
     },
     svg: {
         position: 'absolute',
-        zIndex: 1,
-        top: 0,
+        zIndex: 5,
+        top: -10,
         right: 0,
     },
     touchArea: {
-        zIndex: 2,
+        zIndex: 5,
         position: 'absolute',
         top: 0,
         right: 0,
         width: 100,
-        height: 100,
+        height: '65%',
         alignItems: 'center',
         justifyContent: 'center',
     },

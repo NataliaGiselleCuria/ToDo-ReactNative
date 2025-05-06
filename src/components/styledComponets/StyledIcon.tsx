@@ -42,6 +42,8 @@ const StyledIcon: React.FC<Props> = ({ src, width = 'md', height = 'md', type = 
                   tintColor: typeMap[type],
                   width: widthMap[width],
                   height: heightMap[height],
+                  alignItems:'center',
+                  justifyContent:'center',
                 },
                 style, 
               ]}

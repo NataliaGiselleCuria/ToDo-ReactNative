@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "../screens/HomeScreen";
 import CalendarScreen from "../screens/CalendarScreen";
-import CreateListRedirect from "../screens/createList/CreateListRedirect";
+import CreateListRedirect from "../screens/list/CreateListRedirect";
 import NotificationsScreen from "../screens/NotificationsScreen";
 import ContactsScreen from "../screens/ContactsScreen";
 

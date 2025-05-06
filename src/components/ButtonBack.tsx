@@ -11,7 +11,7 @@ const ButtonBack = ({ onPress }: Props) => {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={styles.button}>
-                <StyledIcon src={require('../assets/icons-general/goBack.png')}/>
+                <StyledIcon width='lg' height='lg' src={require('../assets/icons-general/goBack.png')}/>
             </View>
         </TouchableOpacity>
     )
@@ -24,7 +24,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: 'auto',
-        height: 65,
+        height: 25,
         justifyContent: 'flex-start',
+       
     }
 });

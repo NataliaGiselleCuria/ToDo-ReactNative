@@ -60,7 +60,7 @@ const DrawerItem: React.FC<DrawerItemProps> = ({ icon, label, navigateTo, naviga
 
 const styles = StyleSheet.create({
   itemContainer: {
-    height: 60,
+    height: 50,
     justifyContent: "center",
     overflow: "hidden",
     position: "relative",

@@ -1,7 +1,6 @@
 import React from 'react';
-import { Image, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
-import { globalStyles } from '../../styles/globalStyles';
 import StyledIcon from './StyledIcon';
 
 type Props = {
@@ -31,13 +30,13 @@ const TabBarIcons = ({ routeName, focused }: Props) => {
     isAddButton
       ? [styles.addButtonStyle, { backgroundColor: theme.colors.buttonColor }]
       : focused
-        ? [styles.focusedStyle, { backgroundColor: theme.colors.buttonColor + "33" }]
+        ? [{ backgroundColor: theme.colors.buttonColor + "55" }]
         : styles.defaultStyle,
   ];
 
   return (
     <View style={containerStyle}>    
-      <StyledIcon src={getIcon(routeName)} width='lg' height='lg' style={{ tintColor: isAddButton ? "#fff" : undefined }}/>
+      <StyledIcon src={getIcon(routeName)} width='lg' height='lg' style={{ tintColor: isAddButton ? "#fff" : theme.colors.text }}/>
     </View>
   )
 }
@@ -46,7 +45,9 @@ export default TabBarIcons
 
 const styles = StyleSheet.create({
   iconContainer: {
-    padding: 10,
+    padding: 5,
+    width: 50,
+    height: 50,
     borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
@@ -54,9 +55,7 @@ const styles = StyleSheet.create({
   defaultStyle: {
     backgroundColor: "transparent",
   },
-  focusedStyle: {
-    borderRadius: 100,
-  },
+
   addButtonStyle: {
     width: 60,
     height: 60,

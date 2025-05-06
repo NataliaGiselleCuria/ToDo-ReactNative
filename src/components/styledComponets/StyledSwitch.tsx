@@ -2,17 +2,21 @@ import { StyleSheet, View, ViewStyle } from 'react-native'
 import React from 'react'
 import StyledText from './StyledText'
 import { Switch } from 'react-native-gesture-handler';
+import { useTheme } from '../../context/ThemeContext';
+import { globalStyles } from '../../styles/globalStyles';
 
 type Props = {
-   title: string;
+   title?: string;
    value: string | null;
+   disabled?: boolean;
    onChange: (value: string | null) => void;
    style?: ViewStyle;
    direction?: 'row' | 'column';
 }
 
-const StyledSwitch = ({ title, value, onChange, direction = 'column', style }: Props) => {
-
+const StyledSwitch = ({ title, value, disabled = false, onChange, direction='row', style }: Props) => {
+   const { theme } = useTheme();
+   const gStyles = globalStyles(theme);
    const isEnabled = value === 'Sí';
 
    const toggleSwitch = () => {
@@ -20,14 +24,15 @@ const StyledSwitch = ({ title, value, onChange, direction = 'column', style }: P
    };
 
    return (
-      <View style={[styles.container, { flexDirection: direction }, style]}>
-         <StyledText size='sm'>{title}</StyledText>
+      <View style={[{ flexDirection: direction}, style, gStyles.shadow]}>
+         {title && <StyledText size='sm'>{title}</StyledText>}
          <Switch
+            disabled={disabled}
             value={isEnabled}
             onValueChange={toggleSwitch}
-            trackColor={{ false: '#767577', true: '#81b0ff' }}
-            thumbColor={isEnabled ? '#007AFF' : '#f4f3f4'}
-          />
+            trackColor={{ false: theme.colors.buttonColor + 44, true: theme.colors.buttonColor + 88 }}
+            thumbColor={isEnabled ? theme.colors.buttonColor : '#f4f3f4'}
+         />
       </View>
    )
 }
@@ -35,9 +40,5 @@ const StyledSwitch = ({ title, value, onChange, direction = 'column', style }: P
 export default StyledSwitch
 
 const styles = StyleSheet.create({
-   container: {
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      gap: '5'
-   },
+   
 });

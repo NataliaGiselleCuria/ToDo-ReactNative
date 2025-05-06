@@ -1,7 +1,7 @@
 import { StyleSheet, View, Text } from 'react-native'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import StyledContainer from '../components/styledComponets/StyledContainer'
-import { CalendarList, Calendar } from 'react-native-calendars';
+import { Calendar } from 'react-native-calendars';
 import { useListContext } from '../context/lists/ListContext';
 import { FilterOptions, useMarkedDates } from '../hooks/useMarkedDates';
 

@@ -13,14 +13,14 @@ const Avatar: React.FC<Props> = ({ avatarUser }) => {
     const gStyles = globalStyles(theme);
     
     return (
-        <View style={[styles.wrapper, gStyles.shadow]}>
-            <Svg height="80" width="80" style={[styles.circle, gStyles.shadow]}>
+        <View style={[styles.wrapper, {backgroundColor:theme.colors.backgroundTop}]}>
+            <Svg height="80" width="80" style={[styles.circle]}>
                 <Circle
                     cx="40"
                     cy="40"
                     r="35"
                     stroke={theme.colors.buttonColor}
-                    strokeWidth="4"
+                    strokeWidth="2"
                     strokeDasharray="150 200"
                     strokeLinecap="round"
                     rotation="-80"
@@ -28,7 +28,7 @@ const Avatar: React.FC<Props> = ({ avatarUser }) => {
                     fill="none"
                 />
             </Svg>
-            <Image source={avatarUser} style={[styles.avatar]} />
+            <Image source={avatarUser} style={[styles.avatar, gStyles.shadow]} />
         </View>
     )
 };
@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 30,
         objectFit:'contain',
-        backgroundColor: 'white',
 
     },
 });

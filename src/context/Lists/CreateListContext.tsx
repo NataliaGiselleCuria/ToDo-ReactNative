@@ -1,7 +1,7 @@
 import React, { createContext, useContext, ReactNode, useState } from "react";
 import { List } from "../../types/types";
 
-type CreateListData = Partial<List>;
+export type CreateListData = Partial<List>;
 
 type CreateListContextType = {
     listData: CreateListData;
@@ -17,7 +17,7 @@ export const CreateListProvider = ({ children }: { children: ReactNode }) => {
 
     const updateListData = (data: Partial<List>) => {
         setListData(prev => ({ ...prev, ...data }));
-        console.log(listData)
+        
     };
 
     const resetListData = () => setListData({});

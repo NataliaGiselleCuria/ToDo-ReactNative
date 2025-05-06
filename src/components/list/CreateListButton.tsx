@@ -36,13 +36,13 @@ const CreateListButton = ({ onPress, title }: Props) => {
 export default CreateListButton
 
 const styles = StyleSheet.create({
-    container: {
-        position: 'absolute',
-        bottom: 0,
-        right: 0,
+    container: {     
+        zIndex:1,
+        top: 20,
+        right: -20,
         width: '90%',
-        height: 150,
-        overflow: 'hidden',
+        height: '100%',
+        overflow: 'visible',
         borderTopLeftRadius: 110,
         backgroundColor: '#ff5e5e', // color del botón
     },

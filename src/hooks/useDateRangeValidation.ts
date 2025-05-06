@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { Alert } from "react-native";
+import { combineDateAndTime } from "../../src/utils/dateUtils";
 
 interface DateRangeValidationProps {
   minDate?: Date; // fecha mínima permitida (por ejemplo, startDate de la lista)
@@ -7,64 +8,90 @@ interface DateRangeValidationProps {
 }
 
 export const useDateRangeValidation = ({ minDate, maxDate }: DateRangeValidationProps = {}) => {
-    const validateStartDate = useCallback((start: Date | undefined, end: Date | undefined) => {
-      if (start && end && start > end) {
+
+  //Fecha de inicio
+  const validateStartDate = useCallback((
+    startDate?: Date,
+    startTime?: Date,
+    endDate?: Date,
+    endTime?: Date
+  ) => {
+    const fullStart = combineDateAndTime(startDate, startTime);
+    const fullEnd = combineDateAndTime(endDate, endTime);
+
+    if (fullStart && fullEnd && fullStart > fullEnd) {
+      Alert.alert(
+        "Fecha inválida",
+        "La fecha de inicio no puede ser posterior a la de finalización. Se reiniciará la fecha de finalización."
+      );
+      return { startDate, startTime, endDate: undefined, endTime: undefined };
+    }
+
+    if (minDate && fullStart && fullStart < minDate) {
+      Alert.alert("Fecha inválida", "La fecha de inicio no puede ser anterior a la fecha mínima permitida.");
+      return { startDate: undefined, startTime: undefined, endDate, endTime };
+    }
+
+    if (maxDate && fullStart && fullStart > maxDate) {
+      Alert.alert("Fecha inválida", "La fecha de inicio no puede ser posterior a la fecha máxima permitida.");
+      return { startDate: undefined, startTime: undefined, endDate, endTime };
+    }
+
+    return { startDate, startTime, endDate, endTime };
+  }, [minDate, maxDate]);
+
+
+  //Fecha de finalización
+  const validateEndDate = useCallback((
+    startDate?: Date,
+    startTime?: Date,
+    endDate?: Date,
+    endTime?: Date
+  ) => {
+    const fullStart = combineDateAndTime(startDate, startTime);
+
+    // 1. Validación de rango sin hora (solo fecha)
+    if (startDate && endDate && !endTime) {
+      const justStartDate = new Date(startDate.toDateString());
+      const justEndDate = new Date(endDate.toDateString());
+  
+      if (justEndDate < justStartDate) {
         Alert.alert(
           "Fecha inválida",
-          "La fecha de inicio no puede ser posterior a la fecha de finalización. Se reiniciará la fecha de finalización."
+          "La fecha de fin no puede ser anterior a la fecha de inicio. Se reiniciará."
         );
-        return { startDate: start, endDate: undefined };
+        return { startDate, startTime, endDate: undefined, endTime: undefined };
       }
-  
-      if (minDate && start && start < minDate) {
-        Alert.alert(
-          "Fecha inválida",
-          "La fecha de inicio no puede ser anterior a la fecha de inicio de la lista."
-        );
-        return { startDate: undefined, endDate: end };
-      }
-  
-      if (maxDate && start && start > maxDate) {
-        Alert.alert(
-          "Fecha inválida",
-          "La fecha de inicio no puede ser posterior a la fecha de fin de la lista."
-        );
-        return { startDate: undefined, endDate: end };
-      }
-  
-      return { startDate: start, endDate: end };
-    }, [minDate, maxDate]);
-  
-    const validateEndDate = useCallback((start: Date | undefined, end: Date | undefined) => {
-        if (start && end && end < start) {
-          Alert.alert(
-            "Fecha inválida",
-            "La fecha límite no puede ser anterior a la fecha de inicio. Se reiniciará."
-          );
-          return { startDate: start, endDate: undefined };
-        }
-      
-        if (minDate && end && end < minDate) {
-          Alert.alert(
-            "Fecha inválida",
-            "La fecha límite no puede ser anterior a la fecha de inicio de la lista."
-          );
-          return { startDate: start, endDate: undefined };
-        }
-      
-        if (maxDate && end && end > maxDate) {
-          Alert.alert(
-            "Fecha inválida",
-            "La fecha límite no puede ser posterior a la fecha de fin de la lista."
-          );
-          return { startDate: start, endDate: undefined };
-        }
-      
-        return { startDate: start, endDate: end };
-      }, [minDate, maxDate]);
-  
-    return {
-      validateStartDate,
-      validateEndDate,
-    };
+      return { startDate, startTime, endDate, endTime }; // Si solo hay fechas y es válida, retornamos
+    }
+
+    // 2. Validación de fecha y hora completas
+    const fullEnd = endTime ? combineDateAndTime(endDate, endTime) : undefined;
+
+    if (fullStart && fullEnd && fullEnd < fullStart) {
+      Alert.alert(
+        "Fecha inválida",
+        "La fecha límite no puede ser anterior a la de inicio. Se reiniciará."
+      );
+      return { startDate, startTime, endDate: undefined, endTime: undefined };
+    }
+
+    // 3. Rango mínimo y máximo
+    if (minDate && fullEnd && fullEnd < minDate) {
+      Alert.alert("Fecha inválida", "La fecha límite no puede ser anterior a la fecha mínima permitida.");
+      return { startDate, startTime, endDate: undefined, endTime: undefined };
+    }
+
+    if (maxDate && fullEnd && fullEnd > maxDate) {
+      Alert.alert("Fecha inválida", "La fecha límite no puede ser posterior a la fecha máxima permitida.");
+      return { startDate, startTime, endDate: undefined, endTime: undefined };
+    }
+
+    return { startDate, startTime, endDate, endTime };
+  }, [minDate, maxDate]);
+
+  return {
+    validateStartDate,
+    validateEndDate,
   };
+};

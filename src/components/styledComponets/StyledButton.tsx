@@ -1,43 +1,36 @@
 import React from "react";
-import { TouchableOpacity, Text, StyleSheet, ViewStyle } from "react-native";
+import { TouchableOpacity, StyleSheet, ViewStyle } from "react-native";
 import { useTheme } from "../../context/ThemeContext";
 import { globalStyles } from "../../styles/globalStyles";
+import StyledText from "./StyledText";
 
 type Props = {
     title: string;
     onPress?: () => void;
     style?: ViewStyle;
-    background?: string
 };
 
-const StyledButton: React.FC<Props> = ({ background, title, onPress, style }) => {
+const StyledButton: React.FC<Props> = ({ title, onPress, style }) => {
     const { theme } = useTheme();
     const gStyles = globalStyles(theme);
+
+    const type = title === 'Cancelar' ? 'secondary' : 'button';
 
     return (
         <TouchableOpacity 
             onPress={onPress}
-            style={[styles.button, {backgroundColor: background ? background : theme.colors.buttonColor }, gStyles.shadow, style] }
+            style={[title!=='Cancelar' ?  gStyles.generalButton : gStyles.cancelButton , style]}
         >
-            <Text style={[styles.buttonText, { color: theme.colors.cardText }]}>
+            <StyledText size="sm" type={type}>
                 {title}
-            </Text>
+            </StyledText>
         </TouchableOpacity>
     );
 };
 
-const styles = StyleSheet.create({
-    button: {
-        paddingVertical: 12,
-        paddingHorizontal: 30,
-        borderRadius: 10,
-    },
-    buttonText: {
-        fontSize: 16,
-        textAlign: "center",
-    },
-});
-
 export default StyledButton;
 
-// ,
+const styles = StyleSheet.create({ 
+});
+
+

@@ -13,12 +13,15 @@ import LoginScreen from "../screens/auth/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CustomDrawer from './drawer/CustomDrawer';
 import SettingsScreen from "../screens/SettingsScreen";
+import ViewListScreen from "../screens/list/ViewListScreen";
+import ViewItemScreen from "../screens/item/ViewItemScreen";
 
 //importar navegadores
 import CreateListNavigator from "./CreateListNavigator";
 import FooterNavigator from "./FooterNavigator";
-import ViewList from "../screens/viewList/ViewList";
+
 import { CreateItemProvider } from "../context/items/CreateItemContext";
+
 
 //Crear navegadores
 const AuthStack = createStackNavigator<AuthStackParamList>();
@@ -63,8 +66,8 @@ const DrawerNav = () => {
       }}
       drawerContent={(props) => <CustomDrawer {...props} />}>
       <Drawer.Screen name="Main" component={FooterNavigator} options={{ headerTitle: "" }} />
-      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ headerTitle: "Perfil" }} />
-      <Drawer.Screen name="Settings" component={SettingsScreen} options={{ headerTitle: "Configuración" }} />
+      <Drawer.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false, }} />
+      <Drawer.Screen name="Settings" component={SettingsScreen} options={{ headerShown: false, }} />
       {/* agregar pantallas accesibles desde el menu */}
     </Drawer.Navigator>
   );
@@ -79,7 +82,8 @@ const RootStackNav = () => {
           <RootStack.Screen name="Auth" component={AuthStackNav} />
           <RootStack.Screen name="App" component={AppStackNav} />
           <RootStack.Screen name="CreateList" component={CreateListNavigator} />
-          <RootStack.Screen name="ViewList" component={ViewList} />
+          <RootStack.Screen name="ViewList" component={ViewListScreen} />
+          <RootStack.Screen name="ViewItem" component={ViewItemScreen} />
         </RootStack.Navigator>
       </CreateItemProvider>
     </NavigationContainer>

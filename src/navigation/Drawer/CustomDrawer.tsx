@@ -44,18 +44,18 @@ const CustomDrawer: React.FC<DrawerContentComponentProps> = (props) => {
     };
 
     return (
-        <DrawerContentScrollView {...props} contentContainerStyle={{ backgroundColor: theme.colors.background, flex: 1, justifyContent: 'space-between' }}>
-           <View style={[styles.headerBackground, gStyles.shadow, {backgroundColor: theme.colors.backgroundTop}]}></View>
-            <View style={{ gap: 15, zIndex:1 }}>
+        <DrawerContentScrollView {...props} contentContainerStyle={[styles.contentContainerStyle,{backgroundColor:theme.colors.background}]}>
+            <View style={{ zIndex: 1 }}>
                 {/* Header usuario */}
-                <View style={[ styles.headerContainer]}>
-                    <Avatar avatarUser={mockUser.avatar}/>               
+                <View style={[styles.headerContainer]}>
+                    <View style={[styles.headerBackground, gStyles.shadow, { backgroundColor: theme.colors.backgroundTop }]}></View>
+                    <Avatar avatarUser={mockUser.avatar} />
                     <View>
                         <StyledText size="lg">{mockUser.name}</StyledText>
-                        <StyledText size="md" style={{color: theme.colors.buttonColor}}>{mockUser.id}</StyledText>
+                        <StyledText size="md" style={{ color: theme.colors.buttonColor }}>{mockUser.id}</StyledText>
                     </View>
                 </View>
-                <View>
+                <View style={styles.containerDrawerItems}>
                     {/* Lista de navegación */}
                     {DrawerList.map((item, index) => (
                         <DrawerItem key={index} {...item} navigation={props.navigation} />
@@ -74,19 +74,30 @@ const CustomDrawer: React.FC<DrawerContentComponentProps> = (props) => {
 };
 
 const styles = StyleSheet.create({
-    headerBackground:{
-        position:'absolute',
-        top:0,
-        right:0,
-        width:'110%',
-        height:130
-    },
-    headerContainer: {     
-        flexDirection: "row",
-        alignItems: "center",
-        gap: 12,
+    contentContainerStyle: {
+        flex: 1,
+        justifyContent: 'space-between',
+        width: '100%',
        
     },
+    headerBackground: {
+        position: 'absolute',
+        bottom: 0,
+        right: -100,
+        width: '230%',
+        height: '250%',
+    },
+    headerContainer: {
+        position: 'relative',
+        flexDirection: "row",
+        alignItems: "center",
+        paddingVertical: 10,
+        gap: 5,
+
+    },
+    containerDrawerItems:{
+        marginTop: 10
+    }
 })
 
 export default CustomDrawer;

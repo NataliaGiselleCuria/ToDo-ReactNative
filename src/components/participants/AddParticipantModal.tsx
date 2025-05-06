@@ -1,14 +1,12 @@
-import { StyleSheet, Text, TouchableOpacity, View, Button, Dimensions } from 'react-native'
-import Modal from "react-native-modal";
+import { KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { User } from '../../types/types';
 import StyledInput from '../styledComponets/StyledInput';
-import { FlatList } from 'react-native-gesture-handler';
 import UsersPreview from './UsersPreview';
-import StyledButton from '../styledComponets/StyledButton';
+import { FlatList } from 'react-native-gesture-handler';
+import { User } from '../../types/types';
 import { globalStyles } from '../../styles/globalStyles';
 import { useTheme } from '../../context/ThemeContext';
-
+import { StyledModal } from '../styledComponets/StyledModal';
 
 type Props = {
     visible: boolean;
@@ -21,8 +19,8 @@ type Props = {
 const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUsers }: Props) => {
     const [search, setSearch] = useState('');
     const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
-      const { theme } = useTheme();
-     const gStyles = globalStyles(theme);
+    const { theme } = useTheme();
+    const gStyles = globalStyles(theme);
 
     useEffect(() => {
         setSelectedUsers(isSelectedUsers);
@@ -47,34 +45,38 @@ const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUser
     );
 
     return (
-        <Modal isVisible={visible} onBackdropPress={onClose} customBackdrop={<View style={{flex: 1}} />}>
-            <View style={[gStyles.modalOverlay, gStyles.shadow, {backgroundColor: theme.colors.backgroundTop}]}>
-                <View style={gStyles.modalContent}>
-                    <StyledInput
-                        placeholder="Buscar usuarios..."
-                        value={search}
-                        onChangeText={setSearch}
-                        style={{ width: '100%' }}
-                    />
-                    <FlatList
-                        data={filteredUsers}
-                        keyExtractor={(item) => item.id.toString()}
-                        numColumns={2}
-                        renderItem={({ item }) => {
-                            const isSelected = selectedUsers.some(u => u.id === item.id);
-                            return (
-                                <TouchableOpacity onPress={() => toggleUser(item)} style={[styles.userItem, isSelected && styles.selectedUser]}>
-                                    <UsersPreview user={item} />
-                                </TouchableOpacity>
-                            )
-                        }}
-                    />
-                    <StyledButton title="Confirmar" onPress={confirmSelection} />
-                    <StyledButton title="Cerrar" onPress={onClose} />
-                </View>
-            </View>
-        </Modal>
-       
+
+        <StyledModal visible={visible} onSave={confirmSelection} onClose={onClose} scrollView={false} >
+
+            <StyledInput
+                placeholder="Buscar usuarios..."
+                value={search}
+                onChangeText={setSearch}
+            />
+
+            <FlatList
+                style={styles.containerList}
+                data={filteredUsers}
+                keyExtractor={(item) => item.id.toString()}
+                numColumns={2}
+                renderItem={({ item }) => {
+                    const isSelected = selectedUsers.some(u => u.id === item.id);
+                    return (
+                        <TouchableOpacity
+                            onPress={() => toggleUser(item)}
+                            style={[
+                                styles.userItem,
+                                isSelected && styles.selectedUser,
+                                isSelected && gStyles.shadow,
+                                isSelected && { backgroundColor: theme.colors.background }
+                            ]}>
+                            <UsersPreview user={item} />
+                        </TouchableOpacity>
+                    )
+                }}
+            />
+
+        </StyledModal>
     )
 }
 
@@ -82,29 +84,19 @@ export default AddParticipantModal
 
 export const styles = StyleSheet.create({
 
+    containerList: {
+        height: '90%',
+        flex: 1,
+        borderWidth:1
+    },
     userItem: {
         flex: 1,
-        minWidth: '40%',
+        minWidth: '45%',
+        padding: 5,
         alignItems: 'center',
         margin: 5,
     },
-
     selectedUser: {
-        backgroundColor: '#e0e0e0',
         borderRadius: 5,
     },
-
-    closeButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
-    },
-
-    blur:{
-        flex: 1,
-        width: '100%',
-        height: '100%',
-        filter: 'blur(15px)',
-        backgroundColor:'white'
-    }
 });

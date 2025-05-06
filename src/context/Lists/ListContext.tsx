@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo } from "react";
 import { List } from "../../types/types";
 
 interface ListContextType {
@@ -6,6 +6,7 @@ interface ListContextType {
     addList: (newList: List) => void;
     updateList: (id: number, updated: Partial<List>) => void;
     deleteList: (id: number) => void;
+    getListById: (id: number) => List | undefined;
 }
 
 const ListContext = createContext<ListContextType | undefined>(undefined);
@@ -28,7 +29,6 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
 
     const updateList = (id: number, updated: Partial<List>) => {
         setLists(prevLists => prevLists.map(list => list.id === id ? { ...list, ...updated } : list));
-        console.log(lists)
 
         //Acá lógica para actualizar la lista en MySql
         // try {
@@ -55,11 +55,16 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
         // } 
     }
 
+    const getListById = (id: number) =>{
+        return lists.find(list => list.id === id);
+    } 
+
     const contextValue = useMemo(() => ({
         lists,
         addList,
         updateList,
         deleteList,
+        getListById,
     }), [lists]);
 
     return (

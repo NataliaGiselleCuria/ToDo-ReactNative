@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { User } from '../../types/types';
 import UsersPreview from './UsersPreview';
 import { useTheme } from '../../context/ThemeContext';
-import StyledText from '../styledComponets/StyledText';
 import { globalStyles } from '../../styles/globalStyles';
 import StyledIcon from '../styledComponets/StyledIcon';
 import AddParticipantModal from './AddParticipantModal';
@@ -27,40 +26,56 @@ const ParticipantsList: React.FC<Props> = ({
    simplified = false,
    showUserInfo = true
 }) => {
-   const { theme } = useTheme();
+   const { theme, incrementModalCount, decrementModalCount } = useTheme();
    const gStyles = globalStyles(theme);
-   
+
    const [modalVisible, setModalVisible] = useState(false);
 
    return (
       <>
-         <View style={[styles.container, simplified && styles.simpleContainer]}>
+         <View style={[gStyles.rowWrap, !simplified? styles.containerParticipants : styles.simpleContainerParticipants]}>
+
             {participants?.map((participant) => (
-               <View key={participant.id} style={[styles.participantItem, simplified && styles.simpleParticipantItem]}>
-                  <UsersPreview user={participant} userInfo={showUserInfo} style={[simplified && styles.simpleAvatar]} />
+
+               <View key={participant.id}
+                  style={[styles.participantItem, simplified && styles.simpleParticipantItem]}
+               >
+                  <UsersPreview
+                     user={participant}
+                     userInfo={showUserInfo}
+                     style={[simplified && styles.simpleAvatar]}
+                  />
                   {!simplified && onDelete && !isLoginUser(participant) && (
-                     <TouchableOpacity onPress={() => onDelete(participant.id)} style={styles.deleteButton}>
-                        <Image source={require('../../assets/icons-general/close.png')} style={styles.deleteIcon} />
+                     <TouchableOpacity
+                        onPress={() => onDelete(participant.id)}
+                        style={[styles.deleteButton, { backgroundColor: theme.colors.line }]}
+                     >
+                        <Image
+                           source={require('../../assets/icons-general/close.png')}
+                           style={[styles.deleteIcon, { tintColor: theme.colors.cardText }]}
+                        />
                      </TouchableOpacity>
                   )}
                </View>
             ))}
+
             {onSelectParticipants && (
-               <View style={[styles.participantItem, simplified && styles.simpleAvatar]}>
+               <View style={[styles.participantItem, simplified && styles.simpleAvatar, {width: 40}]}>
                   <TouchableOpacity
-                     onPress={() => setModalVisible(true)}
-                     style={[styles.editButton, simplified && styles.simpleEditButton, { backgroundColor: theme.colors.buttonColor }]}
+                     onPress={() => { setModalVisible(true); incrementModalCount() }}
+                     style={[styles.editButton, simplified && styles.simpleEditButton, gStyles.shadow,
+                     { backgroundColor: theme.colors.buttonColor }]}
                   >
                      <StyledIcon src={require('../../assets/icons-general/edit.png')} type='button' />
-                   
                   </TouchableOpacity>
                </View>
             )}
+
          </View>
-         {onSelectParticipants && (
+         {onSelectParticipants && modalVisible && (
             <AddParticipantModal
                visible={modalVisible}
-               onClose={() => setModalVisible(false)}
+               onClose={() => { setModalVisible(false); decrementModalCount() }}
                onSelect={(selected) => {
                   onSelectParticipants(selected);
                   setModalVisible(false);
@@ -76,28 +91,26 @@ const ParticipantsList: React.FC<Props> = ({
 export default ParticipantsList
 
 const styles = StyleSheet.create({
-   container: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
+
+   containerParticipants: {
+      width: '100%',
+      gap: 1,
+      alignContent: 'center',
+     
    },
-   //Extend
    participantItem: {
-      position: 'relative',
-      width: 110,
-      height: 110,
+      width: '32%',
+      height: 115,
       alignItems: 'center',
       justifyContent: 'center',
       margin: 1,
    },
    deleteButton: {
       position: 'absolute',
-      top: -5,
-      right: -5,
-      backgroundColor: 'white',
+      top: 0,
+      right: 12,
       borderRadius: 10,
       padding: 2,
-      elevation: 3, // sombra si querés
       zIndex: 1,
    },
    deleteIcon: {
@@ -115,24 +128,20 @@ const styles = StyleSheet.create({
    },
 
    //Simple
-   simpleContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      alignItems: 'center',
-      // borderColor: 'blue',
-      // borderWidth: 1
+   simpleContainerParticipants:{
+      margin: 1,
+      paddingLeft:13
    },
    simpleParticipantItem: {
       width: 'auto',
       height: 'auto',
       alignItems: 'center',
       justifyContent: 'center',
-      margin: 1,
    },
    simpleAvatar: {
       width: 25,
       height: 'auto',
-      borderRadius: 40,
+      borderRadius: 40, 
    },
    simpleEditButton: {
       width: 35,

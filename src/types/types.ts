@@ -19,11 +19,16 @@ export interface List {
     createdBy: User;
     category: CategoriesList;
     scheduleStartDate: boolean;
+    scheduleStartTime: boolean;
     startDate: Date;
+    startTime?:Date;
     scheduleEndDate: boolean;
+    scheduleEndTime: boolean;
     endDate?: Date;
+    endTime?:Date;
     participants: User[];
     permissions: PermissionsOptions;
+    allowedUsers: User[];
     items: Item[];
     progress: number;
     compete?: boolean;
@@ -31,7 +36,7 @@ export interface List {
 }
 
 export interface Item {
-    idList:number
+    idList: number
     id: number;
     name: string;
     subcategory?: string;
@@ -45,16 +50,34 @@ export interface Item {
     state: ItemState;
     assignment?: User[];
     owner?: User;
-    note?: string[];
+    note?: Note[];
     priority?: Priority;
     image?: string;
+    record: HistoryChanges[]
+}
+
+export interface Note {
+    id: number;
+    user: User
+    date: Date
+    text?: string,
+    image?: string,
+    audio?: string
+}
+
+export interface HistoryChanges {
+    id: number;
+    type: string
+    user: User
+    date: Date
+    content: string
 }
 
 export enum CategoriesList {
-    shopping = "compras",
-    gift = "regalos",
-    task = "tareas",
-    others = "otras"
+    shopping = "Compras",
+    gift = "Regalos",
+    task = "Tareas",
+    others = "Otras"
 }
 
 export const categoryItemName: Record<CategoriesList, string> = {
@@ -65,7 +88,7 @@ export const categoryItemName: Record<CategoriesList, string> = {
 };
 
 export enum PermissionsOptions {
-    onlyMe = "solo Yo",
+    onlyMe = "solo yo",
     all = "todos",
     some = "algunos"
 }
@@ -74,7 +97,7 @@ export enum ItemState {
     notComplete = "no completado",
     inProsses = "en proceso",
     completed = "completado",
-    
+
 }
 
 export enum StatusList {

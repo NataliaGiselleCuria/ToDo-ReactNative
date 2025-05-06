@@ -6,15 +6,22 @@ interface ThemeContextType {
     theme: typeof themes.default;
     currentThemeId: ThemeId;
     setThemeById: (id: ThemeId) => void;
+    modalCount: number,
+    incrementModalCount: () => void,
+    decrementModalCount: () => void,
 }
 
 const ThemeContext = createContext<ThemeContextType>({
     theme: themes.default,
     currentThemeId: 'default',
     setThemeById: () => { },
+    modalCount: 0,
+    incrementModalCount: () => { },
+    decrementModalCount: () => { },
 });
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+    const [modalCount, setModalCount] = useState(0);
     const [currentThemeId, setCurrentThemeId] = useState<ThemeId>('default');
     const theme = themes[currentThemeId]; // Solo usamos Default por ahora
 
@@ -24,11 +31,19 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         }
     };
 
+    const incrementModalCount = () => {
+        setModalCount((prevCount) => prevCount + 1);
+    };
+
+    const decrementModalCount = () => {
+        setModalCount((prevCount) => Math.max(0, prevCount - 1));
+    }
+
     return (
-        <ThemeContext.Provider value={{ theme, currentThemeId, setThemeById }}>
+        <ThemeContext.Provider value={{ theme, currentThemeId, setThemeById, modalCount, incrementModalCount, decrementModalCount  }}>
             {children}
         </ThemeContext.Provider>
     );
 };
 
-export const useTheme = () => useContext(ThemeContext);
+export const useTheme = () => useContext(ThemeContext); 

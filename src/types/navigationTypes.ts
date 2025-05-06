@@ -1,4 +1,4 @@
-import { List } from "./types";
+import { Item, List } from "./types";
 
 
 // AppNavigator -> Autenticación y el resto de la app
@@ -7,6 +7,7 @@ export type RootStackParamList = {
     App: undefined;
     CreateList: undefined;
     ViewList: {list: List};
+    ViewItem: {item: Item };
 };
 
 // AuthStack (pantallas de autenticación)
