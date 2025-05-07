@@ -10,9 +10,10 @@ type Props = {
     value: Date | undefined;
     justify?: 'flex-start' | 'flex-end' | 'center'
     color?: 'text' | 'buttonColor'
+    showIcon?: boolean
 }
 
-const DatePreview = ({ type, value, justify = 'flex-end', color = 'text' }: Props) => {
+const DatePreview = ({ type, value, justify = 'flex-end', color = 'text', showIcon = true }: Props) => {
     const { theme } = useTheme();
     const gStyles = globalStyles(theme);
 
@@ -26,6 +27,11 @@ const DatePreview = ({ type, value, justify = 'flex-end', color = 'text' }: Prop
     if (value === undefined) {
         return (
             <View style={[styles.date, { justifyContent: justify }]}>
+                {showIcon && (
+                    isDate 
+                    ? (<StyledIcon src={require('../assets/icons-general/calendar.png')} width='sm' height='sm' type={typeIcon} />) 
+                    : (<StyledIcon src={require('../assets/icons-general/clock.png')} width='sm' height='sm' type={typeIcon} />)   
+                )}
                 <StyledText size='sm' type={typeText} style={gStyles.lineHeightSm}>-</StyledText>
             </View>
         );
@@ -33,12 +39,12 @@ const DatePreview = ({ type, value, justify = 'flex-end', color = 'text' }: Prop
 
     const content = isDate ? (
         <>
-            <StyledIcon src={require('../assets/icons-general/calendar.png')} width='sm' height='sm' type={typeIcon} />
+            {showIcon && <StyledIcon src={require('../assets/icons-general/calendar.png')} width='sm' height='sm' type={typeIcon} />}
             <StyledText size='sm' type={typeText} style={gStyles.lineHeightSm}>{formatDate(value)}</StyledText>
         </>
     ) : (
         <>
-            <StyledIcon src={require('../assets/icons-general/clock.png')} width='sm' height='sm' type={typeIcon} />
+            {showIcon && <StyledIcon src={require('../assets/icons-general/clock.png')} width='sm' height='sm' type={typeIcon} />}
             <StyledText size='sm' type={typeText} style={gStyles.lineHeightSm}>{formatTime(value)}</StyledText>
         </>
     );

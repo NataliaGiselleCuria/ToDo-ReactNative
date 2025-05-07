@@ -1,10 +1,8 @@
-import { StyleSheet, Text, View, ScrollView } from 'react-native'
-import Modal from "react-native-modal";
+import { StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import StyledText from '../styledComponets/StyledText';
 import FormStepOne from './FormStepOne';
 import FormStepTwo from './FormStepTwo';
-import StyledButton from '../styledComponets/StyledButton';
 import { List } from '../../types/types';
 import { useListContext } from '../../context/lists/ListContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -35,6 +33,7 @@ const EditListModal: React.FC<EditListModalProps> = ({ visible, onClose, list })
 
     return (
         <StyledModal visible={visible} onSave={handleSave} onClose={onClose}>
+            <View style={[gStyles.gapContainer]}>
             <StyledText size='xlg'>EDITAR LISTA</StyledText>
 
             <FormStepOne
@@ -46,6 +45,7 @@ const EditListModal: React.FC<EditListModalProps> = ({ visible, onClose, list })
                 defaultValues={formData}
                 onChange={data => handleUpdate(data)}
             />
+            </View>
         </StyledModal>
     );
 };

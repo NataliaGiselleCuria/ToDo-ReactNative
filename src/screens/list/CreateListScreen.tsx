@@ -7,7 +7,7 @@ import StyledText from '../../components/styledComponets/StyledText'
 import CreateListButton from '../../components/list/CreateListButton'
 import FormStepOne from '../../components/list/FormStepOne'
 import FormStepTwo from '../../components/list/FormStepTwo'
-import { CommonActions, useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { CreateListParamList } from '../../types/navigationTypes'
 import { useCalendarPermission } from '../../hooks/useCalendarPermissions'
@@ -19,11 +19,13 @@ import { loggedUser } from '../../services/mockUsers' //user de prueba
 import { globalStyles } from '../../styles/globalStyles'
 import { CategoriesList, List, PermissionsOptions } from '../../types/types'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useCancelToHome } from '../../hooks/useCancelToHome';
 
 const CreateListScreen = () => {
 
    const { theme, modalCount } = useTheme();
    const gStyles = globalStyles(theme);
+   const cancelToHome = useCancelToHome();
    const { updateListData, listData, resetListData } = useCreateList();
    const { addList } = useListContext();
    const [step, setStep] = useState(1);
@@ -69,31 +71,17 @@ const CreateListScreen = () => {
       if (step === 1) {
          setStep(step + 1);
       } else {
+         listData.startDate === undefined && (listData.startDate = new Date());
+
          openPermissionModal(() => {
-
             AddNewList();
-
             resetListData();
-
-            navigation.dispatch(
-
-               CommonActions.reset({
-
-                  index: 0,
-
-                  routes: [{ name: "App" }],
-
-               })
-
-            );
-
+            cancelToHome();
          });
       }
    };
 
-   const AddNewList = () => {
-
-      listData.startDate === undefined && (listData.startDate = new Date());
+   const AddNewList = () => { 
 
       const newList = {
          ...listData,
@@ -108,9 +96,6 @@ const CreateListScreen = () => {
       addList(newList as any);
    };
 
-   type NavigationProp = StackNavigationProp<CreateListParamList, 'CreateList'>;
-   const navigation = useNavigation<NavigationProp>();
-
    return (
       <KeyboardAvoidingView
          style={{ flex: 1, backgroundColor: theme.colors.background, paddingTop: 25 }}
@@ -121,7 +106,7 @@ const CreateListScreen = () => {
          <LinearGradient
             colors={[theme.colors.background, theme.colors.background, 'transparent', 'transparent']}
             start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1.6 }}
+            end={{ x: 0, y: 1.52 }}
             style={styles.gradientTop}
          >
             <View style={styles.containerButtonBack}>
@@ -165,14 +150,14 @@ export default CreateListScreen
 
 const styles = StyleSheet.create({
    containerButtonBack: {
-      height: 35,
+      height: 30,
    },
    containerNext: {
       height: 150,
    },
    containerForm: {
       paddingTop: 85,
-      paddingBottom: 110,
+      paddingBottom: 140,
       paddingHorizontal: 20,
       gap: 10,
       overflow: 'visible',
@@ -187,6 +172,7 @@ const styles = StyleSheet.create({
    },
 
    gradientTop: {
+      paddingTop: 10, 
       paddingLeft: 20,
       height: 120,
       width: '100%',

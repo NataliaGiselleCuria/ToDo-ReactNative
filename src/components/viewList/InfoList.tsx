@@ -19,17 +19,17 @@ const InfoList = ({ list }: Props) => {
    const [openInfo, setOpenInfo] = useState(false);
 
    return (
-      <>
+      <View style={styles.containerInfo}>
          <View style={gStyles.rowBetween}>
-            <View style={styles.rowInfo}>
+            <View style={[styles.rowInfo, gStyles.gapItem]}>
                <DiagramList items={list.items} />
             </View>
-            <View style={styles.rowInfo}>
-               <StyledText size='sm'>Participantes</StyledText>
+            <View style={[styles.rowInfo, gStyles.gapItem]}>
                <ParticipantsList
                   participants={list.participants}
                   simplified={true}
-                  showUserInfo={false}                
+                  showUserInfo={false}
+                  size='sm'
                />
             </View>
          </View>
@@ -43,24 +43,34 @@ const InfoList = ({ list }: Props) => {
                <StyledText>{list.description ? list.description : ' -'}</StyledText>
             </View>
             <View style={gStyles.rowBetween}>
-               <StyledText>Fecha de inicio</StyledText>
-               <DatePreview value={list.startDate} type='startDate'  />
+               <StyledText>Inicio</StyledText>
+               <View style={gStyles.row}>
+                  <DatePreview value={list.startDate} type='startDate' />
+                  <DatePreview value={list.startTime} type='startTime' />
+               </View>
             </View>
             <View style={gStyles.rowBetween}>
-               <StyledText>Fecha límite</StyledText>
-               <DatePreview value={list.endDate} type='endDate'  />
+               <StyledText>Fin</StyledText>
+               <View style={gStyles.row}>
+                  <DatePreview value={list.endDate} type='endDate' />
+                  <DatePreview value={list.endTime} type='endTime' />
+               </View>
             </View>
             <View style={gStyles.rowBetween}>
-               <StyledText>Creada por: {list.createdBy.name}</StyledText>
+               <StyledText>Creada por:</StyledText>
+               <StyledText>{list.createdBy.name}</StyledText>
             </View>
          </View>
-      </>
+      </View>
    )
 }
 
 export default InfoList
 
 const styles = StyleSheet.create({
+   containerInfo:{
+      position:'relative'
+   },
    rowInfo: {
       width: '50%',
       alignItems: 'center',
@@ -76,6 +86,7 @@ const styles = StyleSheet.create({
       height: 24,
    },
    infoContainer: {
-      height: 'auto'
+      height: 'auto',
+      paddingTop:10,
    }
 })

@@ -28,6 +28,13 @@ export const StyledModal = ({ visible, onSave, onClose, children, scrollView = t
       }
    }, [visible]);
 
+   const buttons = (
+      <View style={styles.containerButtons}>
+         {onSave && <StyledButton title="Confirmar" onPress={onSave} />}
+         <StyledButton title="Cancelar" onPress={onClose} />
+      </View>
+   )
+
    return (
 
       <View style={gStyles.modal}>
@@ -38,54 +45,47 @@ export const StyledModal = ({ visible, onSave, onClose, children, scrollView = t
             animationIn="slideInDown"
             avoidKeyboard={false}
          >
-            <View style={[gStyles.modalOverlay, gStyles.shadow, { backgroundColor: theme.colors.backgroundTop}]}>
+            <View style={[gStyles.modalOverlay, gStyles.shadow, { backgroundColor: theme.colors.backgroundTop }]}>
                {scrollView
                   ? (
                      <ScrollView
                         ref={scrollViewRef}
                         style={[gStyles.modalContent, { flex: 1 }]}
                         contentContainerStyle={{
-                           paddingBottom: 20,
+
                            flexGrow: 1,
                            justifyContent: 'flex-start',
                         }}
                      >
-                        {children}
-                        <View style={styles.containerButtonsScroll}>
-                           {onSave && <StyledButton title="Confirmar" onPress={onSave} />}
-                           <StyledButton title="Cancelar" onPress={onClose} />
+                        <View style={{ flexGrow: 1 }}>
+                           {children}
                         </View>
+                        {buttons}
                      </ScrollView>
                   )
                   : (
-                     <>
-                        <View style={gStyles.modalContent} >
+                     <View
+                        style={[gStyles.modalContent, { flexGrow: 1 }]}
+                     >
+                        <View style={{ flexGrow: 1 }}>
                            {children}
                         </View>
-                        <View style={styles.containerButtons}>
-                           {onSave && <StyledButton title="Confirmar" onPress={onSave} />}
-                           <StyledButton title="Cancelar" onPress={onClose} />
-                        </View>
-                     </>
+                        {buttons}
+                     </View>
                   )
                }
+
             </View>
-         </Modal>
-      </View>
+         </Modal >
+      </View >
 
    );
 };
 
 export const styles = StyleSheet.create({
    containerButtons: {
-      width: '85%',
-      gap: 10,
-      borderWidth: 1
-   },
-
-   containerButtonsScroll: {
       width: '100%',
-      gap: 10,
+      height: 100,
+      gap: 5,
    },
-
 })

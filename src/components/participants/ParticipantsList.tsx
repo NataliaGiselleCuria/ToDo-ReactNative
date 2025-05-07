@@ -14,6 +14,7 @@ type Props = {
    onSelectParticipants?: (selected: User[]) => void;
    users?: User[];
    simplified?: boolean;
+   size?: 'sm' | 'normal';
    showUserInfo?: boolean;
 };
 
@@ -24,6 +25,7 @@ const ParticipantsList: React.FC<Props> = ({
    users = [],
    isLoginUser = () => false,
    simplified = false,
+   size = 'normal',
    showUserInfo = true
 }) => {
    const { theme, incrementModalCount, decrementModalCount } = useTheme();
@@ -33,7 +35,7 @@ const ParticipantsList: React.FC<Props> = ({
 
    return (
       <>
-         <View style={[gStyles.rowWrap, !simplified? styles.containerParticipants : styles.simpleContainerParticipants]}>
+         <View style={[gStyles.rowWrap, !simplified ? styles.containerParticipants : styles.simpleContainerParticipants]}>
 
             {participants?.map((participant) => (
 
@@ -43,7 +45,11 @@ const ParticipantsList: React.FC<Props> = ({
                   <UsersPreview
                      user={participant}
                      userInfo={showUserInfo}
-                     style={[simplified && styles.simpleAvatar]}
+                     size={size ?? 'normal'}
+                     style={[
+                        simplified && styles.simpleAvatar,
+                        size === 'sm' && styles.avatarSm
+                     ]}
                   />
                   {!simplified && onDelete && !isLoginUser(participant) && (
                      <TouchableOpacity
@@ -60,10 +66,17 @@ const ParticipantsList: React.FC<Props> = ({
             ))}
 
             {onSelectParticipants && (
-               <View style={[styles.participantItem, simplified && styles.simpleAvatar, {width: 40}]}>
+               <View style={[
+                  styles.participantItem, 
+                  simplified && styles.simpleAvatar,
+                  size === 'sm' && styles.avatarSm, 
+                  { width: 40 }]}>
                   <TouchableOpacity
                      onPress={() => { setModalVisible(true); incrementModalCount() }}
-                     style={[styles.editButton, simplified && styles.simpleEditButton, gStyles.shadow,
+                     style={[
+                        styles.editButton,
+                        gStyles.shadow,
+                        simplified && styles.simpleEditButton,
                      { backgroundColor: theme.colors.buttonColor }]}
                   >
                      <StyledIcon src={require('../../assets/icons-general/edit.png')} type='button' />
@@ -94,16 +107,14 @@ const styles = StyleSheet.create({
 
    containerParticipants: {
       width: '100%',
-      gap: 1,
       alignContent: 'center',
-     
+      gap: 0
    },
    participantItem: {
-      width: '32%',
+      width: '33.33333333333333%',
       height: 115,
       alignItems: 'center',
       justifyContent: 'center',
-      margin: 1,
    },
    deleteButton: {
       position: 'absolute',
@@ -128,9 +139,9 @@ const styles = StyleSheet.create({
    },
 
    //Simple
-   simpleContainerParticipants:{
+   simpleContainerParticipants: {
       margin: 1,
-      paddingLeft:13
+      paddingLeft: 13,
    },
    simpleParticipantItem: {
       width: 'auto',
@@ -140,13 +151,17 @@ const styles = StyleSheet.create({
    },
    simpleAvatar: {
       width: 25,
-      height: 'auto',
-      borderRadius: 40, 
+      height: 25,
+      borderRadius: 40,
    },
    simpleEditButton: {
       width: 35,
       height: 35,
       padding: 0,
       marginBottom: 0
-   }
+   },
+   avatarSm: {
+      width: 15,
+      height: 15,
+   },
 });

@@ -46,7 +46,7 @@ export const DarkTheme = {
     categoryColors: assignCategoryColors(["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"]),
     permissionsColors: assignPermissionsColors(["#a7b85c", "#9884B4", "#e5b463"]),
     shadow: "#000",
-    line: "#C3C1BE",
+    line: "rgb(139, 139, 139)",
 
     //elegir color para los botones focuseados del footer
     //elegir color para el borde del avatar (el mismo se usará para el id??)

@@ -2,13 +2,17 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Svg, { Circle } from "react-native-svg";
 import { Item, ItemState } from '../../types/types'
+import { useTheme } from '../../context/ThemeContext';
+import { globalStyles } from '../../styles/globalStyles';
+import StyledText from '../styledComponets/StyledText';
 
 type Props = {
     items: Item[] | []
 }
 
 const DiagramList = ({ items }: Props) => {
-
+    const { theme } = useTheme();
+    const gStyles = globalStyles(theme);
     const total = items.length;
 
     const completed = items.filter(item => item.state === ItemState.completed).length;
@@ -16,7 +20,9 @@ const DiagramList = ({ items }: Props) => {
 
     const progress = total === 0 ? 0 : ((completed + inProgress * 0.5) / total);
 
-    const radius = 40;
+    const color = theme.colors.line + 33;
+
+    const radius = 55;
     const stroke = 10;
     const normalizedRadius = radius - stroke / 2;
     const circumference = 2 * Math.PI * normalizedRadius;
@@ -27,7 +33,7 @@ const DiagramList = ({ items }: Props) => {
         <View style={styles.container}>
             <Svg height={radius * 2} width={radius * 2}>
                 <Circle
-                    stroke="#eee"
+                    stroke={color}
                     fill="none"
                     cx={radius}
                     cy={radius}
@@ -35,7 +41,7 @@ const DiagramList = ({ items }: Props) => {
                     strokeWidth={stroke}
                 />
                 <Circle
-                    stroke="#4CAF50"
+                    stroke='#eee'
                     fill="none"
                     cx={radius}
                     cy={radius}
@@ -48,7 +54,7 @@ const DiagramList = ({ items }: Props) => {
                 />
             </Svg>
             <View style={styles.label}>
-                <Text style={styles.percentage}>{Math.round(progress * 100)}%</Text>
+                <StyledText weight='bold'>{Math.round(progress * 100)}%</StyledText>
             </View>
         </View>
     );
@@ -66,9 +72,5 @@ const styles = StyleSheet.create({
         position: "absolute",
         alignItems: "center",
         justifyContent: "center",
-    },
-    percentage: {
-        fontSize: 18,
-        fontWeight: "bold",
     },
 });

@@ -3,6 +3,10 @@ import { DefaultTheme } from "./theme";
 
 export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
 
+  paddingContainer:{
+    padding:25
+  },
+  
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -13,7 +17,7 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 10
+    gap:10
   },
 
   rowBetween: {
@@ -28,6 +32,10 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     // borderWidth:1
   },
 
+  gapItem:{
+    gap:5
+  },
+
   itemForm: {
     width: '100%',
     gap: 5,
@@ -36,8 +44,8 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
   modalBack: {
     flex: 1,
     position: 'absolute',
-    zIndex: 1,
-    height: '200%',
+    zIndex: 99,
+    height: '20000%',
     top: 0,
     left: 0,
     right: 0,
@@ -58,22 +66,22 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    borderWidth:5,
     width: '100%',
     height: '100%',
+    paddingTop:10
   },
 
   modalContent: {
-    width: '95%',
-    height:'85%',
-    padding: 20,
-    borderWidth:1
+    flex:1,
+    width: '95%',   
+    padding: 5,
   },
 
   containerHeader: {
-    width: '100%',
     borderRadius: 10,
-    padding: 10,
+    paddingVertical:20,
+    paddingHorizontal: 15,
+
   },
 
   headerDrawer:{
@@ -125,10 +133,6 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 4,
-  },
-
-  title:{
-    fontSize:35,
   },
 
   lineHeightSm: {

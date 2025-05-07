@@ -7,6 +7,7 @@ import { User } from '../../types/types';
 import { globalStyles } from '../../styles/globalStyles';
 import { useTheme } from '../../context/ThemeContext';
 import { StyledModal } from '../styledComponets/StyledModal';
+import StyledButton from '../styledComponets/StyledButton';
 
 type Props = {
     visible: boolean;
@@ -55,6 +56,7 @@ const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUser
             />
 
             <FlatList
+            keyboardShouldPersistTaps="handled"
                 style={styles.containerList}
                 data={filteredUsers}
                 keyExtractor={(item) => item.id.toString()}
@@ -75,7 +77,6 @@ const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUser
                     )
                 }}
             />
-
         </StyledModal>
     )
 }
@@ -83,11 +84,9 @@ const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUser
 export default AddParticipantModal
 
 export const styles = StyleSheet.create({
-
     containerList: {
-        height: '90%',
         flex: 1,
-        borderWidth:1
+        width: '100%',
     },
     userItem: {
         flex: 1,

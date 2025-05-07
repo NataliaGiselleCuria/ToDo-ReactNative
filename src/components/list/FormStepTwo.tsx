@@ -50,12 +50,8 @@ const FormStepTwo: React.FC<StepTwoProps> = ({ onChange, defaultValues }) => {
   const isLoginUser = (user: User) => user.id === loggedUser.id;
 
   return (
-    <KeyboardAvoidingView
-             style={[gStyles.gapContainer]}
-             behavior={Platform.OS === "ios" ? "padding" : "height"}
-             keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -200}
-          >
-
+    <View style={[gStyles.gapContainer]}>
+            
       <View style={gStyles.itemForm}>
         <StyledText>Participantes</StyledText>
         <View style={[
@@ -74,18 +70,19 @@ const FormStepTwo: React.FC<StepTwoProps> = ({ onChange, defaultValues }) => {
           />
         </View>
       </View>
-      <View style={gStyles.itemForm}>
+      <View style={[gStyles.itemForm,{paddingBottom:40}]}>
         <StyledText>Permisos de edición</StyledText>
         <OptionsListLayout
           selectedPermissions={permissions}
           onSelectPermissions={setPermissions}
-          styles={{ marginBottom: 5 }}
+          styles={{ marginBottom: 20 }}
         />
         <ParticipantsList
           simplified={true}
           showUserInfo={false}
           participants={allowedUsers}
           isLoginUser={isLoginUser}
+          size='sm'
           users={participants}
           {...(permissions === 'algunos' && {
             onDelete: deleteAllowedUser,
@@ -96,8 +93,7 @@ const FormStepTwo: React.FC<StepTwoProps> = ({ onChange, defaultValues }) => {
           })}
         />
       </View>
-
-    </KeyboardAvoidingView>
+      </View>
   )
 }
 
@@ -107,6 +103,7 @@ const styles = StyleSheet.create({
   containerParticipants: {
     borderWidth: 1,
     borderRadius: 10,
-    paddingVertical: 10
+    paddingVertical: 10,
+    paddingHorizontal:5,
   }
 });

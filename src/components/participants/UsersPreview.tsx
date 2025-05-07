@@ -9,18 +9,31 @@ type Props = {
    user: User;
    style?: StyleProp<ViewStyle>;
    userInfo?: boolean;
+   size?: 'sm' | 'normal'
 };
 
-const UsersPreview = ({ user, userInfo = true, style }: Props) => {
+const UsersPreview = ({ user, userInfo = true, style, size = 'normal' }: Props) => {
 
    const { theme } = useTheme();
    const gStyles = globalStyles(theme);
+
+   const sizeMap = {
+      sm: 40,
+      normal: 60
+   };
 
    return (
       <View style={[styles.container, style]}>
          <Image
             source={user.avatar ? user.avatar : require('../../assets/avatars/ghost.png')}
-            style={[styles.avatar, gStyles.shadow, { backgroundColor: theme.colors.backgroundTop }]}
+            style={[
+               styles.avatar,
+               {
+                  backgroundColor: theme.colors.backgroundTop,
+                  width: sizeMap[size],
+                  height: sizeMap[size]
+               }
+            ]}
          />
          {userInfo &&
             <>
@@ -42,8 +55,6 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
    },
    avatar: {
-      width: 60,
-      height: 60,
       borderRadius: 40,
       objectFit: 'contain',
    },

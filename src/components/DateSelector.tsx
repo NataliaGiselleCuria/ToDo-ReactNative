@@ -37,7 +37,7 @@ const DateSelector = ({ type, label, value, disabled, onChange, defaultValueIfDi
    return (
       <View style={[gStyles.itemForm, { width: '48%' }]}>
          <View style={gStyles.row}>
-            <StyledText>{label}:</StyledText>
+            <StyledText size='sm'>{label}:</StyledText>
             <StyledSwitch
                disabled={disabled}
                value={selectedOption}
@@ -93,7 +93,6 @@ export default DateSelector;
 
 const styles = StyleSheet.create({
    buttonCalendar: {
-
       height: 30,
       alignItems: 'center',
       justifyContent: 'center',

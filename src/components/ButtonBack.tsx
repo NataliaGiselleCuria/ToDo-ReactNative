@@ -26,6 +26,5 @@ const styles = StyleSheet.create({
         width: 'auto',
         height: 25,
         justifyContent: 'flex-start',
-       
     }
 });

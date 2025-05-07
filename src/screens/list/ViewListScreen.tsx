@@ -54,28 +54,28 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
    const item = categoryItemName[listData.category];
 
    return (
-      <ScrollView style={{ flex: 1, minHeight: '100%', backgroundColor: theme.colors.background}}>
-         <StyledContainer>
-            <View style={[gStyles.shadow, gStyles.containerHeader, { backgroundColor: theme.colors.backgroundTop }]}>
-               <HeaderView
-                  onPressBack={cancelToHome}
-                  onPressEdit={() => {setEditListOpen(true); incrementModalCount() }}
-                  name={listData.name}
-                  editedObject={'lista'}
-                  allowedUsers={listData.allowedUsers}
-               />
-               <View style={{ gap: 10, paddingHorizontal: 10 }}>
-                  <View style={gStyles.row}>
-                     <StyledIcon width='sm' height='sm' src={require('../../assets/icons-general/category.png')} />
-                     {listData.category
-                        ? <StyledText size='sm'>{listData.category}</StyledText>
-                        : <StyledText size='sm'>Sin categoría</StyledText>}
-                  </View>
-                  <InfoList list={listData} />
+      <ScrollView style={{ flex: 1, minHeight: '100%', backgroundColor: theme.colors.background, position:'relative'}}>
+         <View style={[gStyles.shadow, gStyles.containerHeader, { backgroundColor: theme.colors.backgroundTop }]}>
+            <HeaderView
+               onPressBack={cancelToHome}
+               onPressEdit={() => { setEditListOpen(true); incrementModalCount() }}
+               name={listData.name}
+               editedObject={'lista'}
+               allowedUsers={listData.allowedUsers}
+            />
+            <View style={[gStyles.gapContainer, { paddingHorizontal: 10 }]}>
+               <View style={[gStyles.row, { paddingLeft: 20 }]}>
+                  <StyledIcon width='sm' height='sm' src={require('../../assets/icons-general/category.png')} />
+                  {listData.category
+                     ? <StyledText size='sm'>{listData.category}</StyledText>
+                     : <StyledText size='sm'>Sin categoría</StyledText>}
                </View>
+               <InfoList list={listData} />
             </View>
+         </View>
+         <View style={[gStyles.paddingContainer, {paddingTop:15}]}>
             <View>
-               <ButtonAdd onPress={() => {setCreatItemOpen(true); incrementModalCount()}} elementoToAdd= {item} />           
+               <ButtonAdd onPress={() => { setCreatItemOpen(true); incrementModalCount() }} elementoToAdd={item} />
             </View>
             <View style={styles.ContainerListItems}>
                {listData.items.map((item) => (
@@ -87,18 +87,18 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
                   list={listData}
                   item={item}
                   visible={creatItemOpen}
-                  onClose={() => {setCreatItemOpen(false); decrementModalCount()}}
+                  onClose={() => { setCreatItemOpen(false); decrementModalCount() }}
                />
             )}
             {editListOpen && (
                <EditListModal
                   visible={editListOpen}
-                  onClose={() => {setEditListOpen(false); decrementModalCount()}}
+                  onClose={() => { setEditListOpen(false); decrementModalCount() }}
                   list={listData}
                />
-            )}
-         </StyledContainer>
-         {modalCount > 0 && <View style={gStyles.modalBack}></View> } 
+            )}   
+         </View>
+         {modalCount > 0 && <View style={gStyles.modalBack}></View>}
       </ScrollView>
    )
 }
@@ -106,9 +106,9 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
 export default ViewListScreen
 
 const styles = StyleSheet.create({
- 
-   ContainerListItems:{
+
+   ContainerListItems: {
       gap: 10,
-      paddingBottom:100
+      paddingBottom: 100
    }
 })
