@@ -1,41 +1,35 @@
 import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import StyledIcon from '../styledComponets/StyledIcon'
-import { Priority } from '../../types/types';
+import { Priority, colorMapPriority } from '../../types/types';
 import StyledText from '../styledComponets/StyledText';
 
 type Props = {
-    priority: Priority | undefined;
-    text?: boolean
+   priority: Priority | undefined;
+   text?: boolean
 };
 
 const ItemPriority: React.FC<Props> = ({ priority, text }) => {
 
-    const colorMap: { [key in Priority]?: string } = {
-        alta: 'red',
-        media: 'orange',
-        baja: 'green',
-    };
+   const color = priority != undefined ? colorMapPriority[priority] : 'grey';
 
-    const color = priority != undefined ? colorMap[priority] : 'grey';
-
-    return (
-        <View style={styles.container}>
-            <StyledIcon src={require('../../assets/icons-general/mark.png')} width='lg' height='lg' style={{ tintColor: color }} />
-            {(!priority && text) && <StyledText size='sm'>Sin prioridad</StyledText>}
-            {text && <StyledText size='sm'>{priority}</StyledText>}
-        </View>
-    )
+   return (
+      <View style={styles.container}>
+         <StyledIcon src={require('../../assets/icons-general/mark.png')} width='lg' height='lg' style={{ tintColor: color }} />
+         {(!priority && text) && <StyledText size='sm'>Sin prioridad</StyledText>}
+         {text && <StyledText size='sm'>{priority}</StyledText>}
+      </View>
+   )
 }
 
 export default ItemPriority
 
 const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        position: 'absolute',
-        top: -15,
-        left: -4
-    }
+   container: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      position: 'absolute',
+      top: -25,
+      left: -4
+   }
 })

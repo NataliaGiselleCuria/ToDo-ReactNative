@@ -43,9 +43,13 @@ export interface Item {
     description?: string;
     createdBy: User;
     scheduleStartDate: boolean;
+    scheduleStartTime: boolean;
     startDate: Date;
+    startTime?:Date;
     scheduleEndDate: boolean;
+    scheduleEndTime: boolean;
     endDate?: Date;
+    endTime?:Date;
     duration?: string;
     state: ItemState;
     assignment?: User[];
@@ -80,6 +84,13 @@ export enum CategoriesList {
     others = "Otras"
 }
 
+export const SubcategoriesByCategory: Record<CategoriesList, string[]> = {
+    [CategoriesList.shopping]: ["carnes", "verduras", "lácteos"],
+    [CategoriesList.gift]: ["ropa", "electrodomésticos", "libros"],
+    [CategoriesList.task]: ["limpieza", "trabajo", "estudio"],
+    [CategoriesList.others]: [] // ← permite escribir lo que el usuario quiera
+};
+
 export const categoryItemName: Record<CategoriesList, string> = {
     [CategoriesList.shopping]: "producto",
     [CategoriesList.gift]: "regalo",
@@ -88,15 +99,15 @@ export const categoryItemName: Record<CategoriesList, string> = {
 };
 
 export enum PermissionsOptions {
-    onlyMe = "solo yo",
-    all = "todos",
-    some = "algunos"
+    onlyMe = "Solo yo",
+    all = "Todos",
+    some = "Algunos"
 }
 
 export enum ItemState {
-    notComplete = "no completado",
-    inProsses = "en proceso",
-    completed = "completado",
+    notComplete = "No completado",
+    inProsses = "En proceso",
+    completed = "Completado",
 
 }
 
@@ -106,18 +117,17 @@ export enum StatusList {
     completed = "completed"
 }
 
-export const SubcategoriesByCategory: Record<CategoriesList, string[]> = {
-    [CategoriesList.shopping]: ["carnes", "verduras", "lácteos"],
-    [CategoriesList.gift]: ["ropa", "electrodomésticos", "libros"],
-    [CategoriesList.task]: ["limpieza", "trabajo", "estudio"],
-    [CategoriesList.others]: [] // ← permite escribir lo que el usuario quiera
-};
-
 export enum Priority {
-    low = "alta",
-    medium = "media",
-    high = "baja"
+    low = "Baja",
+    medium = "Media",
+    high = "Alta"
 }
+
+export const colorMapPriority = {
+    [Priority.low]: 'rgb(100, 155, 121)',
+    [Priority.medium]: 'rgb(221, 182, 96)',
+    [Priority.high]: 'rgb(202, 86, 86)',
+ }
 
 export interface UserPreferences {
     listId: number;

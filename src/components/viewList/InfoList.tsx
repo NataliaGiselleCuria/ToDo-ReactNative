@@ -30,6 +30,7 @@ const InfoList = ({ list }: Props) => {
                   simplified={true}
                   showUserInfo={false}
                   size='sm'
+                 
                />
             </View>
          </View>

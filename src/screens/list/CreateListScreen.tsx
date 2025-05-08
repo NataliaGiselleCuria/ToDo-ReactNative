@@ -104,9 +104,9 @@ const CreateListScreen = () => {
       >
          <CancelCreateButton />
          <LinearGradient
-            colors={[theme.colors.background, theme.colors.background, 'transparent', 'transparent']}
+            colors={[theme.colors.background, theme.colors.background, theme.colors.background, 'transparent']}
             start={{ x: 0, y: 0 }}
-            end={{ x: 0, y: 1.52 }}
+            end={{ x: 0, y: 1 }}
             style={styles.gradientTop}
          >
             <View style={styles.containerButtonBack}>

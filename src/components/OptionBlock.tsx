@@ -1,21 +1,22 @@
-import { View, StyleSheet, Text } from "react-native";
-import { TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+
 import StyledText from "./styledComponets/StyledText";
 import { globalStyles } from '../styles/globalStyles';
 import { useTheme } from '../context/ThemeContext';
-import { CategoriesList } from "../types/types";
+import { colorMapPriority } from "../types/types";
 
 type OptionBlockProps<T> = {
    options: T[];
    selected: T | null | undefined;
    onSelect: (item: T) => void;
-   colorSet?: 'categoryColors' | 'permissionsColors';
+   colorSet?: 'categoryColors' | 'permissionsColors' | 'priorityColors';
 };
 
 function OptionBlock<T extends string>({ options, selected, onSelect, colorSet }: OptionBlockProps<T>) {
-   const { theme } = useTheme();
+   const { theme  } = useTheme();
    const gStyles = globalStyles(theme);
-   const colorMap = colorSet ? theme.colors[colorSet] : theme.colors.buttonColor;
+
+   const colorMap = colorSet==='priorityColors' ? colorMapPriority : colorSet ? theme.colors[colorSet] : theme.colors.buttonColor;
 
    return (
       <View style={[gStyles.rowWrap]}>

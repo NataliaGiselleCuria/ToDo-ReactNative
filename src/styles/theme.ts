@@ -1,4 +1,4 @@
-import { CategoriesList, PermissionsOptions } from "../types/types";
+import { CategoriesList, PermissionsOptions, Priority } from "../types/types";
 
 const assignCategoryColors = (cardColors: string[]) => ({
   [CategoriesList.shopping]: cardColors[0],
@@ -11,6 +11,12 @@ const assignPermissionsColors = (cardColors: string[]) => ({
   [PermissionsOptions.onlyMe]: cardColors[0],
   [PermissionsOptions.all]: cardColors[1],
   [PermissionsOptions.some]: cardColors[2],
+});
+
+export const priorityColors = () => ({
+  [Priority.low]: 'grey',
+  [Priority.medium]: 'orange',
+  [Priority.high]: 'red',
 });
 
 export const DefaultTheme = {
@@ -148,4 +154,5 @@ export const themes = {
   natural: NaturalTheme,
   pastel: PastelTheme,
   eva01: Eva01Theme,
+
 };

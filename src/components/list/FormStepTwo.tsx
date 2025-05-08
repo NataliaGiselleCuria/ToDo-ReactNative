@@ -1,4 +1,4 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native'
+import {StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useTheme } from '../../context/ThemeContext';
 import { PermissionsOptions, User } from '../../types/types';
@@ -84,7 +84,7 @@ const FormStepTwo: React.FC<StepTwoProps> = ({ onChange, defaultValues }) => {
           isLoginUser={isLoginUser}
           size='sm'
           users={participants}
-          {...(permissions === 'algunos' && {
+          {...(permissions === 'Algunos' && {
             onDelete: deleteAllowedUser,
             onSelectParticipants: (selected) => {
               const withoutLoggedUser = selected.filter(user => user.id !== loggedUser.id);

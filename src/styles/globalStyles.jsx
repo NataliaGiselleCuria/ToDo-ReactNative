@@ -4,7 +4,7 @@ import { DefaultTheme } from "./theme";
 export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
 
   paddingContainer:{
-    padding:25
+    padding:20
   },
   
   row: {
@@ -68,7 +68,7 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     borderRadius: 10,
     width: '100%',
     height: '100%',
-    paddingTop:10
+    paddingVertical:10,
   },
 
   modalContent: {
@@ -109,11 +109,11 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     backgroundColor: theme.colors.buttonColor,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: theme.colors.shadow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 6,
+    // shadowColor: theme.colors.shadow,
+    // shadowOffset: { width: 0, height: 4 },
+    // shadowOpacity: 0.3,
+    // shadowRadius: 6,
+    // elevation: 6,
   },
 
   cancelButton: {

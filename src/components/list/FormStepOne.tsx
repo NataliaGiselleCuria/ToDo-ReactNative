@@ -7,6 +7,7 @@ import DateSelector from '../DateSelector';
 import OptionsListLayout from '../OptionsListLayout';
 import { globalStyles } from '../../styles/globalStyles';
 import { useTheme } from '../../context/ThemeContext';
+import { useDatesSchedule } from '../../hooks/useDateScheduler';
 import { CategoriesList } from '../../types/types';
 
 type StepOneProps = {
@@ -50,52 +51,13 @@ const FormStepOne: React.FC<StepOneProps> = ({ onChange, defaultValues }) => {
   const [category, setCategory] = useState<CategoriesList>(defaultValues.category || CategoriesList.others);
   const [description, setDescription] = useState(defaultValues.description ?? "");
 
-  const [scheduleStartDate, setScheduleStartDate] = useState<boolean>(defaultValues.scheduleStartDate || false);
-  const [scheduleStartTime, setScheduleStartTime] = useState<boolean>(defaultValues.scheduleStartTime ?? false);
-  const [startDate, setStartDate] = useState<Date | undefined>(defaultValues.startDate || undefined);
-  const [startTime, setStartTime] = useState<Date | undefined>(defaultValues.startTime || undefined);
-
-  const [scheduleEndDate, setScheduleEndDate] = useState<boolean>(defaultValues.scheduleEndDate ?? false);
-  const [scheduleEndTime, setScheduleEndTime] = useState<boolean>(defaultValues.scheduleEndTime ?? false);
-  const [endDate, setEndDate] = useState<Date | undefined>(defaultValues.endDate || undefined);
-  const [endTime, setEndTime] = useState<Date | undefined>(defaultValues.endTime || undefined);
-
   const { validateStartDate, validateEndDate } = useDateRangeValidation();
 
-  useEffect(() => {
-    onChange({ name, description, category, endDate, startDate, scheduleStartDate, scheduleEndDate, scheduleStartTime, scheduleEndTime, startTime, endTime });
-    !scheduleEndDate && setScheduleEndTime(false);
-  }, [name, description, category, endDate, startDate, scheduleStartDate, scheduleEndDate, scheduleStartTime, scheduleEndTime, startTime, endTime]);
-
-  const handleDateChange = (
-    type: 'startDate' | 'startTime' | 'endDate' | 'endTime',
-    value: Date | undefined,
-    validate: typeof validateStartDate | typeof validateEndDate
-  ) => {
-
-    const newStartDate = type === 'startDate' ? value : startDate;
-    const newStartTime = type === 'startTime' ? value : startTime;
-    const newEndDate = type === 'endDate' ? value : endDate;
-    const newEndTime = type === 'endTime' ? value : endTime;
-
-    const {
-      startDate: validatedStart,
-      startTime: validatedTime,
-      endDate: validatedEnd,
-      endTime: validatedEndTime
-    } = validate(newStartDate, newStartTime, newEndDate, newEndTime);
-
-    setStartDate(validatedStart);
-    setStartTime(validatedTime);
-    setEndDate(validatedEnd);
-    setEndTime(validatedEndTime);
-
-    setScheduleStartDate(!!validatedStart);
-    setScheduleStartTime(!!validatedTime);
-    setScheduleEndDate(!!validatedEnd);
-    setScheduleEndTime(!!validatedEndTime);
-
-  }
+  const {
+    startDate, startTime, endDate, endTime,
+    scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, setScheduleEndTime,
+    handleDateChange
+  } = useDatesSchedule(defaultValues, validateStartDate, validateEndDate)
 
   const handleStartDateChange = (date: Date | undefined) =>
     handleDateChange('startDate', date, validateStartDate);
@@ -108,6 +70,11 @@ const FormStepOne: React.FC<StepOneProps> = ({ onChange, defaultValues }) => {
 
   const handleEndTimeChange = (date: Date | undefined) =>
     handleDateChange('endTime', date, validateEndDate);
+
+  useEffect(() => {
+    onChange({ name, description, category, endDate, startDate, scheduleStartDate, scheduleEndDate, scheduleStartTime, scheduleEndTime, startTime, endTime });
+    !scheduleEndDate && setScheduleEndTime(false);
+  }, [name, description, category, endDate, startDate, scheduleStartDate, scheduleEndDate, scheduleStartTime, scheduleEndTime, startTime, endTime]);
 
   return (
     <View style={gStyles.gapContainer}>
@@ -176,7 +143,3 @@ const FormStepOne: React.FC<StepOneProps> = ({ onChange, defaultValues }) => {
 }
 
 export default FormStepOne;
-
-
-
-

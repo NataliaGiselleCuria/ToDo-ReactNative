@@ -33,7 +33,7 @@ const EditListModal: React.FC<EditListModalProps> = ({ visible, onClose, list })
 
     return (
         <StyledModal visible={visible} onSave={handleSave} onClose={onClose}>
-            <View style={[gStyles.gapContainer]}>
+            <View style={[gStyles.gapContainer,styles.container]}>
             <StyledText size='xlg'>EDITAR LISTA</StyledText>
 
             <FormStepOne
@@ -52,4 +52,8 @@ const EditListModal: React.FC<EditListModalProps> = ({ visible, onClose, list })
 
 export default EditListModal
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container:{
+        paddingBottom:60
+    },
+})

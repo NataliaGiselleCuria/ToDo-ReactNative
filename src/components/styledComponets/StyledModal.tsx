@@ -4,6 +4,7 @@ import Modal from 'react-native-modal';
 import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
 import StyledButton from './StyledButton';
+import LinearGradient from 'react-native-linear-gradient';
 
 
 type Props = {
@@ -29,10 +30,17 @@ export const StyledModal = ({ visible, onSave, onClose, children, scrollView = t
    }, [visible]);
 
    const buttons = (
-      <View style={styles.containerButtons}>
-         {onSave && <StyledButton title="Confirmar" onPress={onSave} />}
-         <StyledButton title="Cancelar" onPress={onClose} />
-      </View>
+      <LinearGradient
+         colors={[theme.colors.backgroundTop, 'transparent',]}
+         start={{ x: 0, y: 0.5 }}
+         end={{ x: 0, y: 0 }}
+         style={styles.gradientButtons}
+      >
+         <View style={styles.containerButtons}>
+            {onSave && <StyledButton title="Confirmar" onPress={onSave} style={{marginTop:5}}/>}
+            <StyledButton title="Cancelar" onPress={onClose} />
+         </View>
+      </LinearGradient>
    )
 
    return (
@@ -57,7 +65,7 @@ export const StyledModal = ({ visible, onSave, onClose, children, scrollView = t
                            justifyContent: 'flex-start',
                         }}
                      >
-                        <View style={{ flexGrow: 1 }}>
+                        <View style={styles.containerChildren}>
                            {children}
                         </View>
                         {buttons}
@@ -67,7 +75,7 @@ export const StyledModal = ({ visible, onSave, onClose, children, scrollView = t
                      <View
                         style={[gStyles.modalContent, { flexGrow: 1 }]}
                      >
-                        <View style={{ flexGrow: 1 }}>
+                        <View style={styles.containerChildren}>
                            {children}
                         </View>
                         {buttons}
@@ -83,9 +91,25 @@ export const StyledModal = ({ visible, onSave, onClose, children, scrollView = t
 };
 
 export const styles = StyleSheet.create({
+   containerChildren: {
+      flex: 1,
+      flexGrow: 1,
+      marginBottom: 37,
+  
+   },
    containerButtons: {
       width: '100%',
-      height: 100,
+      height: 120,
+      justifyContent:'flex-end',
       gap: 5,
+   },
+   gradientButtons: {
+      height: 140,
+      width: '103%',
+      position: 'absolute',
+      zIndex: 1,
+      bottom: 0,
+      paddingHorizontal: 5,
+      justifyContent: 'flex-end',
    },
 })

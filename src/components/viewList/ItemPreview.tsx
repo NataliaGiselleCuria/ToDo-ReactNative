@@ -29,22 +29,40 @@ const ItemPreview = ({ item }: Props) => {
 
     return (
         <TouchableOpacity onPress={goToItem} style={[styles.itemContainer, gStyles.shadow, { borderColor: theme.colors.cardColors[0] }]}>
-            <View>
-                <ItemPriority priority={item.priority} text={false} />
-                <DatePreview startDate={item.startDate} endDate={item.endDate} />
-            </View>
-            <View style={styles.container}>
+            <View style={gStyles.rowBetween}>
                 <View>
+                    <ItemPriority priority={item.priority} text={false} />
+                </View>
+                <View style={gStyles.row}>
+                    <DatePreview
+                        justify='flex-end'
+                        type='startDate'
+                        value={item.startDate}
+                    />
+                    <DatePreview
+                        justify='flex-end'
+                        type='startTime'
+                        value={item.startTime}
+                    />
+                </View>
+
+            </View>
+            <View style={[gStyles.row]}>
+                <View style={[{ width: '50%', marginBottom: 20 }]}>
                     <StyledText>{item.name}</StyledText>
                     <StyledText size='sm'>{item.subcategory}</StyledText>
                     <ItemProgressBar state={item.state} />
                 </View>
-                <View style={styles.container}>
-                    <ParticipantsList
-                        participants={item.assignment}
-                        simplified={true}
-                        showUserInfo={false}
-                    />
+                <View style={[gStyles.row, { width: '50%' }]}>
+                    <View style={[ { width: '80%' }]}>
+                        <ParticipantsList
+                            participants={item.assignment}
+                            simplified={true}
+                            showUserInfo={false}
+                            delimit={true}
+                            size='sm'
+                        />
+                    </View>
                     <StyledIcon src={require('../../assets/icons-general/goNext.png')} />
                 </View>
             </View>
@@ -66,13 +84,6 @@ const ItemPreview = ({ item }: Props) => {
 export default ItemPreview
 
 const styles = StyleSheet.create({
-
-    container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: 10,
-    },
     itemContainer: {
         borderWidth: 1,
         borderRadius: 10,

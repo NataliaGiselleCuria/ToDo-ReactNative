@@ -5,18 +5,21 @@ import { combineDateAndTime } from "../../src/utils/dateUtils";
 interface DateRangeValidationProps {
   minDate?: Date; // fecha mínima permitida (por ejemplo, startDate de la lista)
   maxDate?: Date; // fecha máxima permitida (por ejemplo, endDate de la lista)
+  isTime?: boolean;
 }
 
-export const useDateRangeValidation = ({ minDate, maxDate }: DateRangeValidationProps = {}) => {
+export const useDateRangeValidation = ({ minDate, maxDate, isTime = false }: DateRangeValidationProps = {}) => {
 
   //Fecha de inicio
   const validateStartDate = useCallback((
     startDate?: Date,
     startTime?: Date,
     endDate?: Date,
-    endTime?: Date
+    endTime?: Date,
   ) => {
-    const fullStart = combineDateAndTime(startDate, startTime);
+    const auxMinDate = isTime && !minDate ? new Date() : minDate;
+    const auxStartDate = (!isTime && !startDate) || (isTime && !startTime) ? new Date() : startDate;
+    const fullStart = combineDateAndTime(auxStartDate, startTime);
     const fullEnd = combineDateAndTime(endDate, endTime);
 
     if (fullStart && fullEnd && fullStart > fullEnd) {
@@ -27,7 +30,7 @@ export const useDateRangeValidation = ({ minDate, maxDate }: DateRangeValidation
       return { startDate, startTime, endDate: undefined, endTime: undefined };
     }
 
-    if (minDate && fullStart && fullStart < minDate) {
+    if (auxMinDate && fullStart && fullStart < auxMinDate) {
       Alert.alert("Fecha inválida", "La fecha de inicio no puede ser anterior a la fecha mínima permitida.");
       return { startDate: undefined, startTime: undefined, endDate, endTime };
     }
@@ -46,13 +49,14 @@ export const useDateRangeValidation = ({ minDate, maxDate }: DateRangeValidation
     startDate?: Date,
     startTime?: Date,
     endDate?: Date,
-    endTime?: Date
+    endTime?: Date,
   ) => {
-    const fullStart = combineDateAndTime(startDate, startTime);
+    const auxStartDate = (!isTime && !startDate) || (isTime && !startTime) ? new Date() : startDate;
+    const fullStart = combineDateAndTime(auxStartDate, startTime);
 
     // 1. Validación de rango sin hora (solo fecha)
-    if (startDate && endDate && !endTime) {
-      const justStartDate = new Date(startDate.toDateString());
+    if (auxStartDate && endDate && !endTime) {
+      const justStartDate = new Date(auxStartDate.toDateString());
       const justEndDate = new Date(endDate.toDateString());
   
       if (justEndDate < justStartDate) {

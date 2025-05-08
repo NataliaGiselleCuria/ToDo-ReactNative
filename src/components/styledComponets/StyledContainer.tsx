@@ -33,7 +33,7 @@ const StyledContainer: React.FC<Props> = ({ modal, children, style, centered = f
   const styles = StyleSheet.create({
     base: {
       flex: 1,
-      padding: 25,
+      padding: 20,
       paddingTop: 25,
     },
 

@@ -16,6 +16,7 @@ type Props = {
    simplified?: boolean;
    size?: 'sm' | 'normal';
    showUserInfo?: boolean;
+   delimit?: boolean
 };
 
 const ParticipantsList: React.FC<Props> = ({
@@ -26,18 +27,21 @@ const ParticipantsList: React.FC<Props> = ({
    isLoginUser = () => false,
    simplified = false,
    size = 'normal',
-   showUserInfo = true
+   showUserInfo = true,
+   delimit = false
 }) => {
    const { theme, incrementModalCount, decrementModalCount } = useTheme();
    const gStyles = globalStyles(theme);
 
    const [modalVisible, setModalVisible] = useState(false);
+   const showIconDelimit = delimit && participants && participants?.length > 7;
+   const participantList = showIconDelimit ? participants?.slice(0, 7) : participants;
 
    return (
       <>
          <View style={[gStyles.rowWrap, !simplified ? styles.containerParticipants : styles.simpleContainerParticipants]}>
 
-            {participants?.map((participant) => (
+            {participantList?.map((participant) => (
 
                <View key={participant.id}
                   style={[styles.participantItem, simplified && styles.simpleParticipantItem]}
@@ -67,24 +71,35 @@ const ParticipantsList: React.FC<Props> = ({
 
             {onSelectParticipants && (
                <View style={[
-                  styles.participantItem, 
+                  styles.participantItem,
                   simplified && styles.simpleAvatar,
-                  size === 'sm' && styles.avatarSm, 
-                  { width: 40 }]}>
+                  size === 'sm' && styles.avatarSm,
+               ]}>
                   <TouchableOpacity
                      onPress={() => { setModalVisible(true); incrementModalCount() }}
                      style={[
                         styles.editButton,
                         gStyles.shadow,
                         simplified && styles.simpleEditButton,
-                     { backgroundColor: theme.colors.buttonColor }]}
+                        { backgroundColor: theme.colors.buttonColor }]}
                   >
                      <StyledIcon src={require('../../assets/icons-general/edit.png')} type='button' />
                   </TouchableOpacity>
                </View>
             )}
 
+            {showIconDelimit && (
+                <View style={[
+                  styles.simpleAvatar,
+                  size === 'sm' && styles.avatarSm,
+               ]}>
+               <View>
+                  <StyledIcon src={require('../../assets/icons-general/dotsThree.png')} type='icon' />
+               </View>
+               </View>
+            )}
          </View>
+
          {onSelectParticipants && modalVisible && (
             <AddParticipantModal
                visible={modalVisible}
@@ -136,6 +151,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       width: 50,
       height: 50,
+
    },
 
    //Simple

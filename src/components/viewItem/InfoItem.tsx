@@ -30,11 +30,11 @@ const InfoItem = ({ item }: Props) => {
             <View>
                 <View style={gStyles.rowBetween}>
                     <StyledText size='sm'>Fecha de inicio</StyledText>
-                    <DatePreview startDate={item.startDate} showTime={true} />
+                    {/* <DatePreview startDate={item.startDate} showTime={true} /> */}
                 </View>
                 <View style={gStyles.rowBetween}>
                     <StyledText size='sm'>Fecha límite</StyledText>
-                    <DatePreview startDate={item.endDate} showTime={true} />
+                    {/* <DatePreview startDate={item.endDate} showTime={true} /> */}
                 </View>
                 <View style={gStyles.rowBetween}>
                     <StyledText size='sm'>Creado por:</StyledText>

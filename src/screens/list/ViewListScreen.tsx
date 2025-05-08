@@ -73,7 +73,7 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
                <InfoList list={listData} />
             </View>
          </View>
-         <View style={[gStyles.paddingContainer, {paddingTop:15}]}>
+         <View style={[gStyles.paddingContainer, gStyles.gapContainer, {paddingTop:15}]}>
             <View>
                <ButtonAdd onPress={() => { setCreatItemOpen(true); incrementModalCount() }} elementoToAdd={item} />
             </View>
@@ -82,6 +82,7 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
                   <ItemPreview key={item.id} item={item} />
                ))}
             </View>
+
             {creatItemOpen && (
                <CreateItemModal
                   list={listData}
