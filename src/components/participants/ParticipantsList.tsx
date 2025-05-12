@@ -1,11 +1,11 @@
 import { StyleSheet, Image, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { User } from '../../types/types';
-import UsersPreview from './UsersPreview';
 import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
 import StyledIcon from '../styledComponets/StyledIcon';
 import AddParticipantModal from './AddParticipantModal';
+import UsersPreview from './UsersPreview';
 
 type Props = {
    participants: User[] | undefined;

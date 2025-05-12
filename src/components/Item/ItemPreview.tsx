@@ -1,17 +1,18 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Item } from '../../types/types'
-import StyledText from '../styledComponets/StyledText'
-import ParticipantsList from '../participants/ParticipantsList'
-import StyledIcon from '../styledComponets/StyledIcon'
-import { globalStyles } from '../../styles/globalStyles'
-import { useTheme } from '../../context/ThemeContext'
-import ItemProgressBar from './ItemProgressBar'
-import ItemPriority from './ItemPriority'
-import DatePreview from '../DatePreview'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../types/navigationTypes'
+import { getColorForOthersItem } from '../../styles/theme'
+import { globalStyles } from '../../styles/globalStyles'
+import { useTheme } from '../../context/ThemeContext'
+import StyledText from '../styledComponets/StyledText'
+import ParticipantsList from '../participants/ParticipantsList'
+import StyledIcon from '../styledComponets/StyledIcon'
+import ItemProgressBar from './ItemProgressBar'
+import ItemPriority from './ItemPriority'
+import DatePreview from '../DatePreview'
 
 type Props = {
     item: Item,
@@ -27,34 +28,56 @@ const ItemPreview = ({ item }: Props) => {
         navigation.navigate('ViewItem', { item });
     }
 
+    const subCategoryColor =
+        item.subcategory
+            ? theme.colors.subCategoryColors[item.subcategory] ?? getColorForOthersItem(item.subcategory, theme)
+            : theme.colors.textSecondary;
+
     return (
-        <TouchableOpacity onPress={goToItem} style={[styles.itemContainer, gStyles.shadow, { borderColor: theme.colors.cardColors[0] }]}>
-            <View style={gStyles.rowBetween}>
-                <View>
-                    <ItemPriority priority={item.priority} text={false} />
-                </View>
+        <TouchableOpacity
+            onPress={goToItem}
+            style={[
+                styles.itemContainer,
+                gStyles.shadow,
+                {
+                    borderColor: subCategoryColor,
+                    backgroundColor:subCategoryColor
+                },
+            ]}
+        >
+            <View style={[gStyles.rowBetween,]}>
+                <ItemPriority priority={item.priority} text={false} color='button' topPosition={-18} />
                 <View style={gStyles.row}>
                     <DatePreview
                         justify='flex-end'
                         type='startDate'
                         value={item.startDate}
+                        color='buttonColor'
                     />
                     <DatePreview
                         justify='flex-end'
                         type='startTime'
                         value={item.startTime}
+                        color='buttonColor'
                     />
                 </View>
-
             </View>
             <View style={[gStyles.row]}>
-                <View style={[{ width: '50%', marginBottom: 20 }]}>
+                <View style={styles.containerColumn}>
                     <StyledText>{item.name}</StyledText>
-                    <StyledText size='sm'>{item.subcategory}</StyledText>
+                    <View style={[gStyles.row]}>
+                        <StyledIcon width='sm' height='sm'
+                            src={require('../../assets/icons-general/category.png')}
+
+                        />
+                        {item.subcategory &&
+                            <StyledText size='sm'  >{item.subcategory}</StyledText>
+                        }
+                    </View>
                     <ItemProgressBar state={item.state} />
                 </View>
-                <View style={[gStyles.row, { width: '50%' }]}>
-                    <View style={[ { width: '80%' }]}>
+                <View style={[gStyles.row, styles.containerColumn]}>
+                    <View style={[{ width: '80%' }]}>
                         <ParticipantsList
                             participants={item.assignment}
                             simplified={true}
@@ -68,16 +91,16 @@ const ItemPreview = ({ item }: Props) => {
             </View>
             <View style={[gStyles.row, { gap: 20 }]}>
                 <View style={gStyles.row}>
-                    <StyledIcon src={require('../../assets/icons-general/record.png')} />
-                    <StyledText size='sm'>{item.record.length}</StyledText>
+                    <StyledIcon src={require('../../assets/icons-general/record.png')} type='secondary' />
+                    <StyledText size='sm' type='secondary'>{item.record.length}</StyledText>
                 </View>
                 <View style={gStyles.row}>
-                    <StyledIcon src={require('../../assets/icons-general/chat.png')} />
-                    <StyledText size='sm'>{item.note?.length}</StyledText>
+                    <StyledIcon src={require('../../assets/icons-general/chat.png')} type='secondary' />
+                    <StyledText size='sm' type='secondary'>{item.note?.length}</StyledText>
                 </View>
             </View>
 
-        </TouchableOpacity>
+        </TouchableOpacity >
     )
 }
 
@@ -89,11 +112,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'white',
         padding: 10,
+        gap: 5
     },
     mark: {
         borderRadius: 5,
         borderWidth: 1,
         borderColor: 'black',
         paddingHorizontal: 10
-    }
+    },
+    containerColumn: {
+        width: '50%'
+    },
 })

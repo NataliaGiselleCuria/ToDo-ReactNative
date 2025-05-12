@@ -3,10 +3,10 @@ import { DefaultTheme } from "./theme";
 
 export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
 
-  paddingContainer:{
-    padding:20
+  paddingContainer: {
+    padding: 20
   },
-  
+
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -17,7 +17,7 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap:10
+    gap: 10
   },
 
   rowBetween: {
@@ -32,8 +32,8 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     // borderWidth:1
   },
 
-  gapItem:{
-    gap:5
+  gapItem: {
+    gap: 5
   },
 
   itemForm: {
@@ -45,7 +45,7 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     flex: 1,
     position: 'absolute',
     zIndex: 99,
-    height: '20000%',
+    // height: '20000%',
     top: 0,
     left: 0,
     right: 0,
@@ -53,46 +53,42 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     backgroundColor: 'rgba(18, 20, 20, 0.86)',
   },
 
-  modal: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: '100%',
-  },
+  // modal: {
+  //   flex: 1,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  // },
 
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
-    width: '100%',
-    height: '100%',
-    paddingVertical:10,
+    paddingVertical: 10,
   },
 
   modalContent: {
-    flex:1,
-    width: '95%',   
+    flex: 1,
+    width: '95%',
     padding: 5,
   },
 
   containerHeader: {
     borderRadius: 10,
-    paddingVertical:20,
+    paddingVertical: 20,
     paddingHorizontal: 15,
 
   },
 
-  headerDrawer:{
-    position:'absulute',
-    top:-25,
-    left:-25,
-    width:'150%',
-    height:60,
+  headerDrawer: {
+    position: 'absulute',
+    top: -25,
+    left: -25,
+    width: '150%',
+    height: 60,
     paddingLeft: 10,
-    flexDirection:'row',
-    alignItems:'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
     backgroundColor: theme.colors.backgroundTop,
     shadowColor: theme.colors.shadow,
@@ -109,11 +105,11 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     backgroundColor: theme.colors.buttonColor,
     justifyContent: 'center',
     alignItems: 'center',
-    // shadowColor: theme.colors.shadow,
-    // shadowOffset: { width: 0, height: 4 },
-    // shadowOpacity: 0.3,
-    // shadowRadius: 6,
-    // elevation: 6,
+    shadowColor: theme.colors.shadow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 6,
   },
 
   cancelButton: {
@@ -121,6 +117,23 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  deleteButton: {
+    width: '95%',
+    height: 40,
+    borderWidth: 1,
+    borderColor: 'rgb(255, 23, 7)',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+    backgroundColor:theme.colors.background,
+    shadowColor: theme.colors.shadow,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 6,
   },
 
   buttonDisabled: {

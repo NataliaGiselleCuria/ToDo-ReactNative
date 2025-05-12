@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ItemState } from '../../types/types';
+import { useTheme } from '../../context/ThemeContext';
+import { globalStyles } from '../../styles/globalStyles';
 import StyledText from '../styledComponets/StyledText';
 import StyledIcon from '../styledComponets/StyledIcon';
 
@@ -17,6 +19,9 @@ const states: ItemState[] = [
 ];
 
 const ItemProgressBar: React.FC<Props> = ({ state, onChange, editable }) => {
+  const {theme} = useTheme();
+  const gStyles = globalStyles(theme);
+
   if (!state) {
     return null;
   }
@@ -28,7 +33,7 @@ const ItemProgressBar: React.FC<Props> = ({ state, onChange, editable }) => {
   };
 
   const colorMap: Record<ItemState, string> = {
-    [ItemState.notComplete]: '#ccc',
+    [ItemState.notComplete]: theme.colors.line,
     [ItemState.inProsses]: '#f0ad4e',
     [ItemState.completed]: '#5cb85c',
   };
@@ -53,8 +58,8 @@ const ItemProgressBar: React.FC<Props> = ({ state, onChange, editable }) => {
   };
 
   const BarEditable = (
-    <View style={styles.containerEditable}>
-      <StyledText style={{ color: colorMap[state], borderColor: colorMap[state], borderWidth: 1, padding: 10, borderRadius: 5}}>{state}</StyledText>
+    <View style={[styles.containerEditable, {borderColor:theme.colors.line, backgroundColor:theme.colors.backgroundTop}]}>
+      <StyledText style={{ color: colorMap[state], borderColor: colorMap[state], padding:5, alignSelf:'flex-start' }}>{state}</StyledText>
       <View style={styles.editable}>
         {states.map((s, index) => {
           const stepStatus = getStepStatus(index);
@@ -67,8 +72,10 @@ const ItemProgressBar: React.FC<Props> = ({ state, onChange, editable }) => {
               <TouchableOpacity
                 style={[
                   styles.circle,
+                  gStyles.shadow,
+                  
                   {
-                    backgroundColor: (isCompleted || isCurrent) ? color : '#fff',
+                    backgroundColor: (isCompleted || isCurrent) ? color : theme.colors.backgroundTop,
                     borderColor: color,
                   },
                 ]}
@@ -123,7 +130,7 @@ export default ItemProgressBar;
 
 const styles = StyleSheet.create({
   container: {
-    width: 130,
+    width: '100%',
     marginVertical: 8,
     alignItems: 'center',
   },
@@ -138,15 +145,15 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 5,
   },
-  correntState: {
-    padding: 10,
-    borderWidth: 1
-  },
+
   containerEditable: {
-    alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
-    marginTop:10
+    alignContent: 'center',
+    marginVertical: 10,
+    width: '100%',
+    alignSelf:'center',
+    borderRadius:10,
+    padding:5
   },
   editable: {
     flexDirection: 'row',
@@ -164,7 +171,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   line: {
-    width: 40,
+    width: 20,
     height: 2,
     backgroundColor: '#ccc',
   },

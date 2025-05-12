@@ -1,5 +1,15 @@
+import React, { useState } from 'react'
 import { StyleSheet, View, BackHandler, KeyboardAvoidingView, Platform } from 'react-native'
-import React, { useMemo, useState } from 'react'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCalendarPermission } from '../../hooks/useCalendarPermissions'
+import { useCreateList } from '../../context/lists/CreateListContext'
+import { useListContext } from '../../context/lists/ListContext'
+import { useTheme } from '../../context/ThemeContext';
+import { loggedUser } from '../../services/mockUsers' //user de prueba
+import { globalStyles } from '../../styles/globalStyles'
+import { CategoriesList, List, PermissionsOptions } from '../../types/types'
+import { ScrollView } from 'react-native-gesture-handler'
+import { useCancelToHome } from '../../hooks/useCancelToHome';
 import LinearGradient from 'react-native-linear-gradient';
 import CancelCreateButton from '../../components/list/CancelCreateButton'
 import ButtonBack from '../../components/ButtonBack'
@@ -7,19 +17,6 @@ import StyledText from '../../components/styledComponets/StyledText'
 import CreateListButton from '../../components/list/CreateListButton'
 import FormStepOne from '../../components/list/FormStepOne'
 import FormStepTwo from '../../components/list/FormStepTwo'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
-import { StackNavigationProp } from '@react-navigation/stack'
-import { CreateListParamList } from '../../types/navigationTypes'
-import { useCalendarPermission } from '../../hooks/useCalendarPermissions'
-import { useCreateList } from '../../context/lists/CreateListContext'
-import { useListContext } from '../../context/lists/ListContext'
-import { useTheme } from '../../context/ThemeContext';
-
-import { loggedUser } from '../../services/mockUsers' //user de prueba
-import { globalStyles } from '../../styles/globalStyles'
-import { CategoriesList, List, PermissionsOptions } from '../../types/types'
-import { ScrollView } from 'react-native-gesture-handler'
-import { useCancelToHome } from '../../hooks/useCancelToHome';
 
 const CreateListScreen = () => {
 
@@ -170,7 +167,6 @@ const styles = StyleSheet.create({
       height: '20%',
       width: '110%',
    },
-
    gradientTop: {
       paddingTop: 10, 
       paddingLeft: 20,

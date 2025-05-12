@@ -56,7 +56,6 @@ export interface Item {
     owner?: User;
     note?: Note[];
     priority?: Priority;
-    image?: string;
     record: HistoryChanges[]
 }
 
@@ -85,9 +84,9 @@ export enum CategoriesList {
 }
 
 export const SubcategoriesByCategory: Record<CategoriesList, string[]> = {
-    [CategoriesList.shopping]: ["carnes", "verduras", "lácteos"],
-    [CategoriesList.gift]: ["ropa", "electrodomésticos", "libros"],
-    [CategoriesList.task]: ["limpieza", "trabajo", "estudio"],
+    [CategoriesList.shopping]: ["Carnes", "Verduras", "Lácteos"],
+    [CategoriesList.gift]: ["Ropa", "Electrodomésticos", "Libros"],
+    [CategoriesList.task]: ["Limpieza", "Trabajo", "Estudio"],
     [CategoriesList.others]: [] // ← permite escribir lo que el usuario quiera
 };
 

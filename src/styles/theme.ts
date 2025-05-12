@@ -1,4 +1,15 @@
-import { CategoriesList, PermissionsOptions, Priority } from "../types/types";
+import { CategoriesList, PermissionsOptions, Priority, SubcategoriesByCategory } from "../types/types";
+
+export const getColorForOthersItem = (itemName: string, theme: any) => {
+  const colors = theme.colors.othersColors;
+  
+  // Hashear el nombre para elegir un color de forma predecible
+  const index = itemName
+    .split('')
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+
+  return colors[index];
+};
 
 const assignCategoryColors = (cardColors: string[]) => ({
   [CategoriesList.shopping]: cardColors[0],
@@ -6,6 +17,20 @@ const assignCategoryColors = (cardColors: string[]) => ({
   [CategoriesList.task]: cardColors[2],
   [CategoriesList.others]: cardColors[3],
 });
+
+export const assignSubCategoryColors = (cardColors: string[]): Record<string, string> => {
+  const subCategoryColors: Record<string, string> = {};
+  let i = 0;
+
+  Object.values(SubcategoriesByCategory).forEach((subcats) => {
+    subcats.forEach((subcat) => {
+      subCategoryColors[subcat] = cardColors[i % cardColors.length];
+      i++;
+    });
+  });
+
+  return subCategoryColors;
+};
 
 const assignPermissionsColors = (cardColors: string[]) => ({
   [PermissionsOptions.onlyMe]: cardColors[0],
@@ -26,15 +51,17 @@ export const DefaultTheme = {
     background: "#ffffff",
     backgroundTop: "#ffffff",
     text: "#383838",
-    textSecondary: 'rgba(97,97,99,1)',
+    textSecondary: 'rgb(113, 113, 114)',
     buttonColor: "#6c8dc4",
     cardText: "#ffffff",
     cardColors: ["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"],
     categoryColors: assignCategoryColors(["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"]),
+    subCategoryColors: assignSubCategoryColors(["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"]),
     permissionsColors: assignPermissionsColors(["#a7b85c", "#9884B4", "#e5b463"]),
+     othersColors: ["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"],
     shadow: 'rgb(42, 42, 43)',
     line: "#C3C1BE",
-    
+
   },
 };
 
@@ -50,7 +77,9 @@ export const DarkTheme = {
     cardText: "#383838",
     cardColors: ["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"],
     categoryColors: assignCategoryColors(["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"]),
+    subCategoryColors: assignSubCategoryColors(["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"]),
     permissionsColors: assignPermissionsColors(["#a7b85c", "#9884B4", "#e5b463"]),
+    othersColors: ["#a7b85c", "#9884B4", "#e5b463", "#dc9b7c", "#a77fad"],
     shadow: "#000",
     line: "rgb(139, 139, 139)",
 

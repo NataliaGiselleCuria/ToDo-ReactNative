@@ -28,7 +28,7 @@ const Avatar: React.FC<Props> = ({ avatarUser }) => {
                     fill="none"
                 />
             </Svg>
-            <Image source={avatarUser} style={[styles.avatar, gStyles.shadow]} />
+            <Image source={avatarUser} style={[styles.avatar]} />
         </View>
     )
 };

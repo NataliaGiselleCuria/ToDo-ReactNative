@@ -9,7 +9,7 @@ type OptionBlockProps<T> = {
    options: T[];
    selected: T | null | undefined;
    onSelect: (item: T) => void;
-   colorSet?: 'categoryColors' | 'permissionsColors' | 'priorityColors';
+   colorSet?: 'categoryColors' | 'subCategoryColors' | 'permissionsColors' | 'priorityColors';
 };
 
 function OptionBlock<T extends string>({ options, selected, onSelect, colorSet }: OptionBlockProps<T>) {

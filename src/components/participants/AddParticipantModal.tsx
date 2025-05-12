@@ -1,13 +1,13 @@
-import { KeyboardAvoidingView, Platform, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import StyledInput from '../styledComponets/StyledInput';
-import UsersPreview from './UsersPreview';
 import { FlatList } from 'react-native-gesture-handler';
 import { User } from '../../types/types';
 import { globalStyles } from '../../styles/globalStyles';
 import { useTheme } from '../../context/ThemeContext';
 import { StyledModal } from '../styledComponets/StyledModal';
 import LinearGradient from 'react-native-linear-gradient';
+import StyledInput from '../styledComponets/StyledInput';
+import UsersPreview from './UsersPreview';
 
 type Props = {
     visible: boolean;
@@ -66,37 +66,34 @@ const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUser
                 keyboardShouldPersistTaps="handled"
                 style={styles.containerList}
                 data={filteredUsers}
-                keyExtractor={(item) => item.id.toString()}
+               keyExtractor={(item) => `${item.id}-${selectedUsers.some(u => u.id === item.id)}`}
                 numColumns={2}
+                extraData={selectedUsers}
                 renderItem={({ item, index }) => {
                     const isSelected = selectedUsers.some(u => u.id === item.id);
                     const isFirstTwo = index < 2;
-                    const isLastTwo = index >= filteredUsers.length - 2;
-                    const isPair = index % 2 === 0;
-
-                    const itemStyles = [
-                        styles.userItem,
-                        isSelected && styles.selectedUser,
-                        isSelected && gStyles.shadow,
-                        isSelected && { backgroundColor: theme.colors.background },
-                    ]
-
-                    if (isFirstTwo) {
-                        itemStyles.push(styles.firstUserItems);
-                    } else if (isLastTwo && isPair ) {
-                        itemStyles.push(styles.lastsUserItems); 
-                    }
+                    const isLast = index === filteredUsers.length - 1;
+                    const isLastTwo = index === filteredUsers.length - 2;
+                    const isEven = filteredUsers.length % 2 === 0;
+                    const addedStyleBottom = isEven ? (isLast || isLastTwo) : isLast;
 
                     return (
                         <TouchableOpacity
                             onPress={() => toggleUser(item)}
-                            style={itemStyles}>
+                            style={[
+                                styles.userItem,
+                                isSelected && styles.selectedUser,
+                                isSelected && gStyles.shadow,
+                                isSelected && { backgroundColor: theme.colors.background },
+                                isFirstTwo && styles.firstUserItems,
+                                addedStyleBottom && styles.lastsUserItems,
+                            ]}>
                             <UsersPreview user={item} />
                         </TouchableOpacity>
                     )
                 }}
             />
-        </StyledModal>
+        </StyledModal >
     )
 }
 
@@ -123,11 +120,12 @@ export const styles = StyleSheet.create({
         alignItems: 'center',
         margin: 5,
     },
-    firstUserItems:{
-        marginTop:15
+    firstUserItems: {
+        marginTop: 15,
+
     },
-    lastsUserItems:{
-        marginBottom:20
+    lastsUserItems: {
+        marginBottom: 20,
     },
     selectedUser: {
         borderRadius: 5,

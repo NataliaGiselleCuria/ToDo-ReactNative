@@ -6,6 +6,7 @@ export type RootStackParamList = {
     Auth: undefined;
     App: undefined;
     CreateList: undefined;
+    EditList: {list: List}
     ViewList: {list: List};
     ViewItem: {item: Item };
 };

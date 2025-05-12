@@ -21,6 +21,8 @@ import CreateListNavigator from "./CreateListNavigator";
 import FooterNavigator from "./FooterNavigator";
 
 import { CreateItemProvider } from "../context/items/CreateItemContext";
+import EditItemModal from "../components/Item/EditItemModal";
+import EditListModal from "../screens/list/EditListScreen";
 
 
 //Crear navegadores
@@ -82,6 +84,7 @@ const RootStackNav = () => {
           <RootStack.Screen name="Auth" component={AuthStackNav} />
           <RootStack.Screen name="App" component={AppStackNav} />
           <RootStack.Screen name="CreateList" component={CreateListNavigator} />
+          <RootStack.Screen name="EditList" component={EditListModal} />
           <RootStack.Screen name="ViewList" component={ViewListScreen} />
           <RootStack.Screen name="ViewItem" component={ViewItemScreen} />
         </RootStack.Navigator>

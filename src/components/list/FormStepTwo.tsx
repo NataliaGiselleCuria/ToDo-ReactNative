@@ -2,12 +2,11 @@ import {StyleSheet, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useTheme } from '../../context/ThemeContext';
 import { PermissionsOptions, User } from '../../types/types';
-import StyledText from '../styledComponets/StyledText'
-
 import { loggedUser, otherUsers, userContacts } from '../../services/mockUsers' //user de prueba
+import { globalStyles } from '../../styles/globalStyles';
 import ParticipantsList from '../participants/ParticipantsList';
 import OptionsListLayout from '../OptionsListLayout';
-import { globalStyles } from '../../styles/globalStyles';
+import StyledText from '../styledComponets/StyledText'
 
 type StepTwoProps = {
   onChange: (data: { participants: User[]; permissions: PermissionsOptions; allowedUsers: User[] }) => void;

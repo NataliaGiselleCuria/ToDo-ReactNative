@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
-import { HistoryChanges, Note } from '../../types/types'
-import { useTheme } from '../../context/ThemeContext'
-import { globalStyles } from '../../styles/globalStyles'
-import StyledText from '../styledComponets/StyledText'
-import DatePreview from '../DatePreview'
-import { StyledModal } from '../styledComponets/StyledModal'
+import { HistoryChanges, Note } from '../../../types/types'
+import { useTheme } from '../../../context/ThemeContext'
+import { globalStyles } from '../../../styles/globalStyles'
+import StyledText from '../../styledComponets/StyledText'
+import DatePreview from '../../DatePreview'
+import { StyledModal } from '../../styledComponets/StyledModal'
 import AudioVisualizer from './AudioVisualizer'
 
 type Props = {
@@ -29,7 +29,10 @@ const ItemModal = ({ show, onClose, visible }: Props) => {
                 <View key={index} style={[styles.container, { borderBottomColor: theme.colors.buttonColor }]}>
                     <View style={gStyles.rowBetween}>
                         <StyledText size='sm'>{show.user.name}</StyledText>
-                        <DatePreview startDate={show.date} showTime={true} />
+                        <View>
+                        <DatePreview type='startDate' value={show.date} showIcon={false} color='secondary' />
+                        <DatePreview type='startTime' value={show.date} showIcon={false} color='secondary' />
+                        </View>
                     </View>
 
                     {isHistory(show) 

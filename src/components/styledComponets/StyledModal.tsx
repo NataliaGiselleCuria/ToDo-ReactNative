@@ -45,7 +45,7 @@ export const StyledModal = ({ visible, onSave, onClose, children, scrollView = t
 
    return (
 
-      <View style={gStyles.modal}>
+      <View>
          <Modal
             isVisible={visible}
             onBackdropPress={onClose}

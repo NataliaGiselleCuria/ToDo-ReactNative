@@ -9,7 +9,7 @@ type Props = {
     type: 'startDate' | 'startTime' | 'endDate' | 'endTime',
     value: Date | undefined;
     justify?: 'flex-start' | 'flex-end' | 'center'
-    color?: 'text' | 'buttonColor'
+    color?: 'text' | 'buttonColor' | 'secondary'
     showIcon?: boolean
 }
 
@@ -19,8 +19,9 @@ const DatePreview = ({ type, value, justify = 'flex-end', color = 'text', showIc
 
     const formatDate = (date: Date) => { return date.toLocaleDateString('es-AR') };
     const formatTime = (date: Date) => { return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }) };
-    const typeText = color === 'text' ? 'primary' : 'button';
-    const typeIcon = color === 'text' ? 'icon' : 'button';
+    const typeText = color === 'text' ? 'primary' : color === 'secondary' ? 'secondary' : 'button';
+    const typeIcon = color === 'text' ? 'icon' : color === 'secondary' ? 'secondary' : 'button';
+
 
     const isDate = type.includes('Date') ?? true;
 

@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, Animated } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import StyledText from '../styledComponets/StyledText'
 import { useTheme } from '../../context/ThemeContext';
 import { usePressScale } from '../../hooks/usePressScale';

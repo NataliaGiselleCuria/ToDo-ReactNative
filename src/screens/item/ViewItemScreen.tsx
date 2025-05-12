@@ -1,21 +1,20 @@
 import { StyleSheet, TouchableOpacity, View, } from 'react-native'
-import React, { useEffect, useMemo, useState } from 'react'
-import { categoryItemName, Item, List } from '../../types/types';
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import React, { useMemo, useState } from 'react'
+import { RouteProp } from '@react-navigation/native';
 import { useItemContext } from '../../context/items/ItemContext';
 import { useListContext } from '../../context/lists/ListContext';
 import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
+import { categoryItemName, Item } from '../../types/types';
 import StyledContainer from '../../components/styledComponets/StyledContainer';
 import StyledText from '../../components/styledComponets/StyledText';
-import HeaderView from '../../components/HeaderView';
 import StyledIcon from '../../components/styledComponets/StyledIcon';
-import ChangeState from '../../components/viewItem/ChangeState';
-import InfoItem from '../../components/viewItem/InfoItem';
-import ButtonAdd from '../../components/ButtonAdd';
-import ItemModal from '../../components/viewItem/ItemModal';
-import AddNoteModal from '../../components/viewItem/AddNoteModal';
-
+import ItemModal from '../../components/Item/viewItem/ItemModal';
+import AddNoteModal from '../../components/Item/viewItem/AddNoteModal';
+import StyledContainerView from '../../components/styledComponets/StyledContainerView';
+import CreateItemModal from '../../components/list/viewList/CreateItemModal';
+import ItemForm from '../../components/Item/ItemForm';
+import EditItemModal from '../../components/Item/EditItemModal';
 
 type RootStackParamList = {
     ViewItem: { item: Item };
@@ -38,6 +37,9 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
     const { getItemById } = useItemContext();
     const { item: routeItem } = route.params;
 
+
+
+
     const listData = useMemo(() => {
         return getListById(routeItem.idList);
     }, [lists, routeItem.idList]);
@@ -46,9 +48,10 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
         return getItemById(routeItem.idList, routeItem.id);
     }, [listData?.items, routeItem.idList, routeItem.id]);
 
-    const { theme } = useTheme();
+    const { theme, decrementModalCount } = useTheme();
     const gStyles = globalStyles(theme);
-    const navigate = useNavigation()
+
+    const itemName = listData ? categoryItemName[listData.category] : 'ítem';
 
     if (!itemData) {
         return (
@@ -59,27 +62,16 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
     }
 
     const list = getListById(itemData.idList)
-    const itemLabel = list && categoryItemName[list.category] || 'item';
 
     return (
-        <StyledContainer>
-            <View style={[gStyles.shadow, gStyles.containerHeader, { backgroundColor: theme.colors.backgroundTop }]}>
-                <HeaderView
-                    onPressBack={() => navigate.goBack()}
-                    onPressEdit={() => setEditItemOpen(true)}
-                    name={itemData.name}
-                    editedObject={itemLabel}
-                    allowedUsers={list?.allowedUsers}
-                />
-                <InfoItem item={itemData} />
-            </View>
-            <View >
-                <ChangeState idList={itemData.idList} id={itemData.id} />
-            </View>
-            <View>
-                <ButtonAdd onPress={() => setAddNote(true)} elementoToAdd='Nota' />
-            </View>
+        <StyledContainerView
+            data={itemData}
+            onPressHeader={() => setEditItemOpen(true)}
+            onPressButtonAdd={() => setAddNote(true)}
+            list={list}
+        >
             <View style={[gStyles.rowBetween, { paddingHorizontal: 10 }]}>
+
                 <TouchableOpacity
                     onPress={() => itemData.record.length > 0 && setOpenRecords(true)}
                     style={[styles.button, gStyles.shadow, { backgroundColor: theme.colors.buttonColor }]}
@@ -103,19 +95,33 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
                 </TouchableOpacity>
             </View>
             {addNote && (
-                <AddNoteModal item={itemData} visible={addNote} onClose={() => setAddNote(false)} />
+                <AddNoteModal
+                    item={itemData}
+                    visible={addNote}
+                    onClose={() => { setAddNote(false); decrementModalCount() }} />
             )}
             {itemData.record && (
-                <ItemModal visible={openRecords} onClose={() => setOpenRecords(false)} show={itemData.record} />
+                <ItemModal
+                    visible={openRecords}
+                    show={itemData.record}
+                    onClose={() => { setOpenRecords(false); decrementModalCount() }} />
             )}
             {itemData.note && (
-                <ItemModal visible={openNotes} onClose={() => setOpenNotes(false)} show={itemData.note} />
+                <ItemModal
+                    visible={openNotes}
+                    show={itemData.note}
+                    onClose={() => { setOpenNotes(false); decrementModalCount() }} />
             )}
-            {editItemOpen && (
-                <></>
+            {(editItemOpen && listData) && (
+                <EditItemModal
+                    list={listData}
+                    itemToEdit={itemData}
+                    visible={editItemOpen}
+                    onClose={() => { setEditItemOpen(false); decrementModalCount() }}                  
+                />  
             )}
 
-        </StyledContainer>
+        </StyledContainerView>
     )
 }
 

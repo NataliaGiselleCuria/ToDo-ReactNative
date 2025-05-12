@@ -1,19 +1,18 @@
 import { View, TouchableOpacity, TextInput, Text, StyleSheet, Image, Alert, Platform } from 'react-native';
 import { launchCamera } from 'react-native-image-picker';
 import { request, PERMISSIONS, RESULTS } from 'react-native-permissions';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import { useState } from 'react';
-import { Item, Note, } from '../../types/types';
-
-import { loggedUser } from '../../services/mockUsers';
-import { useItemContext } from '../../context/items/ItemContext';
-import { StyledModal } from '../styledComponets/StyledModal';
-import StyledButton from '../styledComponets/StyledButton';
+import { Item, } from '../../../types/types';
+import { loggedUser } from '../../../services/mockUsers';
+import { useItemContext } from '../../../context/items/ItemContext';
+import { StyledModal } from '../../styledComponets/StyledModal';
+import { useTheme } from '../../../context/ThemeContext';
+import { globalStyles } from '../../../styles/globalStyles';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import AudioVisualizer from './AudioVisualizer';
-import StyledText from '../styledComponets/StyledText';
-import StyledIcon from '../styledComponets/StyledIcon';
-import { useTheme } from '../../context/ThemeContext';
-import { globalStyles } from '../../styles/globalStyles';
+import StyledText from '../../styledComponets/StyledText';
+import StyledIcon from '../../styledComponets/StyledIcon';
+
 
 type Props = {
    item: Item;
@@ -130,7 +129,7 @@ const AddNoteModal = ({ item, visible, onClose }: Props) => {
 
             <View>
                <TouchableOpacity onPress={handlePickImage} style={gStyles.row}>
-                  <StyledIcon src={require('../../assets/icons-general/camera.png')} />
+                  <StyledIcon src={require('../../../assets/icons-general/camera.png')} />
                   <StyledText>Subir imagen</StyledText>
                </TouchableOpacity>
                {imageUri && (
@@ -139,7 +138,7 @@ const AddNoteModal = ({ item, visible, onClose }: Props) => {
             </View>
             <View>
                <TouchableOpacity onPress={handleRecordAudio} style={gStyles.row}>
-                  <StyledIcon src={require('../../assets/icons-general/microphone.png')} />
+                  <StyledIcon src={require('../../../assets/icons-general/microphone.png')} />
                   <StyledText>Subir audio</StyledText>
                </TouchableOpacity>
                <View style={styles.footer}>

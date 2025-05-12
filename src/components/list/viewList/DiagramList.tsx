@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Svg, { Circle } from "react-native-svg";
-import { Item, ItemState } from '../../types/types'
-import { useTheme } from '../../context/ThemeContext';
-import { globalStyles } from '../../styles/globalStyles';
-import StyledText from '../styledComponets/StyledText';
+import { Item, ItemState } from '../../../types/types'
+import { useTheme } from '../../../context/ThemeContext';
+import { globalStyles } from '../../../styles/globalStyles';
+import StyledText from '../../styledComponets/StyledText';
 
 type Props = {
     items: Item[] | []

@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, Animated } from 'react-native'
-import React, { useState } from 'react'
+import React from 'react'
 import StyledText from '../styledComponets/StyledText'
 import { useCancelToHome } from '../../hooks/useCancelToHome';
 import { useCreateList } from '../../context/lists/CreateListContext';

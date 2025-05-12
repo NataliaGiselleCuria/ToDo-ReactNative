@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, View, StyleSheet, TouchableOpacity, Text, TouchableWithoutFeedback, LayoutChangeEvent } from 'react-native';
-import { useAudioPlayer } from '../../hooks/useAudioPlayer';
+import { useAudioPlayer } from '../../../hooks/useAudioPlayer';
 
 type Props = {
     audio: string;

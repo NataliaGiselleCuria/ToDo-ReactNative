@@ -8,7 +8,7 @@ type Props = {
     width?: 'sm' | 'md' | 'lg' | 'xl',
     height?: 'sm' | 'md' | 'lg' | 'xl',
     style?: StyleProp<ImageStyle>;
-    type?: 'icon' | 'button'
+    type?: 'icon' | 'button' | 'secondary'
 }
 
 const StyledIcon: React.FC<Props> = ({ src, width = 'md', height = 'md', type = 'icon', style }) => {
@@ -31,7 +31,8 @@ const StyledIcon: React.FC<Props> = ({ src, width = 'md', height = 'md', type = 
 
     const typeMap ={
         icon: theme.colors.text,
-        button: theme.colors.cardText
+        button: theme.colors.cardText,
+        secondary: theme.colors.textSecondary
     }
 
     return (

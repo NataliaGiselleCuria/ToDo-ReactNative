@@ -16,7 +16,7 @@ type Props = {
   selectedPriority?: Priority | null;
   onSelectPriority?: (priority: Priority) => void;
 
-   styles?: ViewStyle;
+  styles?: ViewStyle;
 };
 
 const OptionsListLayout = ({
@@ -37,9 +37,9 @@ const OptionsListLayout = ({
   const priorities = Object.values(Priority);
 
   return (
-    <View style={{...styles}}>
+    <View style={{ ...styles }}>
       {selectedCategory && onSelectCategory && (
-        <OptionBlock         
+        <OptionBlock
           options={categories}
           selected={selectedCategory}
           onSelect={onSelectCategory}
@@ -51,7 +51,7 @@ const OptionsListLayout = ({
           options={subcategories}
           selected={selectedSubcategory}
           onSelect={onSelectSubcategory}
-          
+          colorSet='subCategoryColors'
         />
       )}
       {selectedPermissions && onSelectPermissions && (
