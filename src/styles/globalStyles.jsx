@@ -70,7 +70,6 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
   modalContent: {
     flex: 1,
     width: '95%',
-    padding: 5,
   },
 
   containerHeader: {

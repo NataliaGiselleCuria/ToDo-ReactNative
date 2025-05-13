@@ -29,7 +29,7 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
 
     const updateList = (id: number, updated: Partial<List>) => {
         setLists(prevLists => prevLists.map(list => list.id === id ? { ...list, ...updated } : list));
-
+        console.log('Nuevo item')
         //Acá lógica para actualizar la lista en MySql
         // try {
         //     await updateListInMySQL(id, updated); // lógica de update en base

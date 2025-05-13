@@ -1,5 +1,5 @@
 import { StyleSheet, Image, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { User } from '../../types/types';
 import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
@@ -89,13 +89,13 @@ const ParticipantsList: React.FC<Props> = ({
             )}
 
             {showIconDelimit && (
-                <View style={[
+               <View style={[
                   styles.simpleAvatar,
                   size === 'sm' && styles.avatarSm,
                ]}>
-               <View>
-                  <StyledIcon src={require('../../assets/icons-general/dotsThree.png')} type='icon' />
-               </View>
+                  <View>
+                     <StyledIcon src={require('../../assets/icons-general/dotsThree.png')} type='icon' />
+                  </View>
                </View>
             )}
          </View>

@@ -8,11 +8,10 @@ import StyledButton from './styledComponets/StyledButton'
 type Props = {
     handleSave: () => void,
     handleCancel: () => void,
-
 }
 
 const ConfirmCancelButtons = ({ handleSave, handleCancel }: Props) => {
-    const { theme } = useTheme();
+    const { theme, decrementModalCount } = useTheme();
     const gStyles = globalStyles(theme);
 
     return (
@@ -24,7 +23,7 @@ const ConfirmCancelButtons = ({ handleSave, handleCancel }: Props) => {
         >
             <View style={styles.containerButtons}>
                 <StyledButton title="Confirmar" onPress={handleSave} style={{ marginTop: 5 }} />
-                <StyledButton title="Cancelar" onPress={handleCancel} />
+                <StyledButton title="Cancelar" onPress={() => {handleCancel(); decrementModalCount()}} />
             </View>
         </LinearGradient>
     )
@@ -36,9 +35,9 @@ const styles = StyleSheet.create({
     containerButtons: {
         width: '100%',
         height: 120,
+        alignSelf: 'center',
         justifyContent: 'flex-end',
         gap: 5,
-        borderWidth:1
     },
     gradientButtons: {
         height: 140,

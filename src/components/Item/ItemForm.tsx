@@ -16,10 +16,9 @@ type ItemFormProps = {
     type: 'create' | 'edit';
     list: List;
     item: string;
-    onSubmit: () => void;
 };
 
-const ItemForm: React.FC<ItemFormProps> = ({ type, list, item, onSubmit }) => {
+const ItemForm: React.FC<ItemFormProps> = ({ type, list, item }) => {
     const { theme } = useTheme();
     const gStyles = globalStyles(theme);
     const { updateItemData, itemData } = useCreateItem();

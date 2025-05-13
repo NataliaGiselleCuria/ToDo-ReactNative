@@ -1,14 +1,15 @@
 import { Item, List } from "./types";
 
-
 // AppNavigator -> Autenticación y el resto de la app
 export type RootStackParamList = {
     Auth: undefined;
     App: undefined;
-    CreateList: undefined;
-    EditList: {list: List}
+    CreateList: undefined;   
     ViewList: {list: List};
-    ViewItem: {item: Item };
+    EditList: {list: List}
+    CreateItem: { list: List };
+    ViewItem: { item: { id: number, idList: number } };
+    EditItem: { list: List; item: Item };
 };
 
 // AuthStack (pantallas de autenticación)

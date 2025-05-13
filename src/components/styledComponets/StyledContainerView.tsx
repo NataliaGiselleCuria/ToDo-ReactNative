@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { ScrollView, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
 import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
@@ -18,17 +18,24 @@ interface Props {
    list?: List;
    onPressHeader: () => void;
    onPressButtonAdd: () => void;
-
 }
 
 const StyledContainerView: React.FC<Props> = ({ data, list, children, style, onPressHeader, onPressButtonAdd }) => {
-   const { theme, incrementModalCount, modalCount } = useTheme();
+   const { theme, modalCount } = useTheme();
    const gStyles = globalStyles(theme);
    const cancelToHome = useCancelToHome();
 
    const listData = (data: List | Item): data is List => {
       return (data as List).participants !== undefined;
    };
+
+   useEffect (() => {
+     if (modalCount > 0){
+      console.log('background on')
+     }else{
+       console.log('background off')
+     }
+   }, [modalCount]);
 
    const isList = listData(data);
    const itemLabel = isList ? categoryItemName[data.category] : 'Nota';
@@ -45,7 +52,7 @@ const StyledContainerView: React.FC<Props> = ({ data, list, children, style, onP
             >
                <HeaderView
                   onPressBack={handleBack}
-                  onPressEdit={() => { onPressHeader(); incrementModalCount() }}
+                  onPressEdit={() => onPressHeader()}
                   name={data.name}
                   editedObject={isList ? 'lista' : 'item'}
                   allowedUsers={isList ? data.allowedUsers : list?.allowedUsers}
@@ -84,13 +91,14 @@ const StyledContainerView: React.FC<Props> = ({ data, list, children, style, onP
                   styles.buttonAdd, gStyles.shadow,
                   { backgroundColor: theme.colors.backgroundTop, borderColor: theme.colors.line }
                ]}
-               onPress={() => { onPressButtonAdd(); incrementModalCount() }}
+               onPress={() => { onPressButtonAdd(); }}
             >
                <StyledText>Agregar {itemLabel}</StyledText>
-            </TouchableOpacity>
+            </TouchableOpacity>         
          </LinearGradient>
 
          {modalCount > 0 && <View style={gStyles.modalBack}></View>}
+         
       </>
    )
 }

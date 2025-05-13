@@ -25,7 +25,7 @@ const ItemPreview = ({ item }: Props) => {
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
     const goToItem = () => {
-        navigation.navigate('ViewItem', { item });
+        navigation.navigate('ViewItem', { item: { id: item.id, idList: item.idList } });
     }
 
     const subCategoryColor =

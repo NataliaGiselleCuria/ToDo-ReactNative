@@ -66,7 +66,7 @@ const AddParticipantModal = ({ visible, onClose, onSelect, users, isSelectedUser
                 keyboardShouldPersistTaps="handled"
                 style={styles.containerList}
                 data={filteredUsers}
-               keyExtractor={(item) => `${item.id}-${selectedUsers.some(u => u.id === item.id)}`}
+                keyExtractor={(item) => `${item.id}-${selectedUsers.some(u => u.id === item.id)}`}
                 numColumns={2}
                 extraData={selectedUsers}
                 renderItem={({ item, index }) => {

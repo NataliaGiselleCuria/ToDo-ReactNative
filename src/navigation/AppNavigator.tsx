@@ -7,6 +7,7 @@ import { globalStyles } from "../styles/globalStyles";
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
 import { ListProvider } from "../context/lists/ListContext";
 import { ItemProvider } from "../context/items/ItemContext";
+import { CreateItemProvider } from "../context/items/CreateItemContext";
 
 //Importar pantallas
 import LoginScreen from "../screens/auth/LoginScreen";
@@ -15,14 +16,13 @@ import CustomDrawer from './drawer/CustomDrawer';
 import SettingsScreen from "../screens/SettingsScreen";
 import ViewListScreen from "../screens/list/ViewListScreen";
 import ViewItemScreen from "../screens/item/ViewItemScreen";
+import EditListScreen from "../screens/list/EditListScreen";
+import EditItemScreen from "../screens/item/EditItemScreen";
 
 //importar navegadores
 import CreateListNavigator from "./CreateListNavigator";
 import FooterNavigator from "./FooterNavigator";
-
-import { CreateItemProvider } from "../context/items/CreateItemContext";
-import EditItemModal from "../components/Item/EditItemModal";
-import EditListModal from "../screens/list/EditListScreen";
+import CreateItemScreen from "../screens/item/CreateItemScreen";
 
 
 //Crear navegadores
@@ -83,10 +83,12 @@ const RootStackNav = () => {
         <RootStack.Navigator screenOptions={{ headerShown: false }}>
           <RootStack.Screen name="Auth" component={AuthStackNav} />
           <RootStack.Screen name="App" component={AppStackNav} />
-          <RootStack.Screen name="CreateList" component={CreateListNavigator} />
-          <RootStack.Screen name="EditList" component={EditListModal} />
+          <RootStack.Screen name="CreateList" component={CreateListNavigator} />         
           <RootStack.Screen name="ViewList" component={ViewListScreen} />
+          <RootStack.Screen name="CreateItem" component={CreateItemScreen} />
+          <RootStack.Screen name="EditList" component={EditListScreen} />
           <RootStack.Screen name="ViewItem" component={ViewItemScreen} />
+          <RootStack.Screen name="EditItem" component={EditItemScreen} />
         </RootStack.Navigator>
       </CreateItemProvider>
     </NavigationContainer>
@@ -99,7 +101,7 @@ const AppNavigator = () => {
     <ThemeProvider>
       <ListProvider>
         <ItemProvider>
-        <RootStackNav />
+          <RootStackNav />
         </ItemProvider>
       </ListProvider>
     </ThemeProvider>

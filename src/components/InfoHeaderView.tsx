@@ -8,7 +8,7 @@ import ChangeState from './Item/viewItem/ChangeState';
 import StyledText from './styledComponets/StyledText';
 import StyledIcon from './styledComponets/StyledIcon';
 import ParticipantsList from './participants/ParticipantsList';
-import DiagramList from './list/viewList/DiagramList';
+import DiagramList from './list/DiagramList'
 import DatePreview from './DatePreview';
 
 type Props = {

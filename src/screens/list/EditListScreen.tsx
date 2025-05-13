@@ -6,12 +6,12 @@ import { List } from '../../types/types';
 import { useListContext } from '../../context/lists/ListContext';
 import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
+import { useCancelToHome } from '../../hooks/useCancelToHome';
 import StyledText from '../../components/styledComponets/StyledText';
 import FormStepOne from '../../components/list/FormStepOne';
 import FormStepTwo from '../../components/list/FormStepTwo';
 import StyledContainer from '../../components/styledComponets/StyledContainer';
 import ConfirmCancelButtons from '../../components/ConfirmCancelButtons';
-import { useCancelToHome } from '../../hooks/useCancelToHome';
 
 type EditListRouteProp = RouteProp<RootStackParamList, 'EditList'>;
 
@@ -19,8 +19,8 @@ type Props = {
    route: EditListRouteProp;
 };
 
-const EditListModal: React.FC<Props> = ({ route }) => {
-   const { theme, decrementModalCount } = useTheme();
+const EditListScreen: React.FC<Props> = ({ route }) => {
+   const { theme, decrementModalCount, modalCount } = useTheme();
    const gStyles = globalStyles(theme);
    const { list } = route.params;
    const { updateList, deleteList } = useListContext();
@@ -34,6 +34,7 @@ const EditListModal: React.FC<Props> = ({ route }) => {
 
    const handleSave = () => {
       updateList(formData.id, formData);
+      handleCancel()
    };
 
    const handleCancel = () => {
@@ -64,7 +65,6 @@ const EditListModal: React.FC<Props> = ({ route }) => {
       );
    };
 
-
    return (
       <>
          <StyledContainer scroll={true}>
@@ -92,11 +92,12 @@ const EditListModal: React.FC<Props> = ({ route }) => {
             handleSave={handleSave}
             handleCancel={handleCancel}
          />
+          {modalCount > 0 && <View style={gStyles.modalBack}></View>}
       </>
    );
 };
 
-export default EditListModal
+export default EditListScreen
 
 const styles = StyleSheet.create({
    container: {

@@ -20,7 +20,7 @@ import FormStepTwo from '../../components/list/FormStepTwo'
 
 const CreateListScreen = () => {
 
-   const { theme, modalCount } = useTheme();
+   const { theme, modalCount, decrementModalCount } = useTheme();
    const gStyles = globalStyles(theme);
    const cancelToHome = useCancelToHome();
    const { updateListData, listData, resetListData } = useCreateList();
@@ -73,20 +73,19 @@ const CreateListScreen = () => {
          openPermissionModal(() => {
             AddNewList();
             resetListData();
+            decrementModalCount();
             cancelToHome();
          });
       }
    };
 
    const AddNewList = () => { 
-
       const newList = {
          ...listData,
          id: Date.now(),
          createdBy: loggedUser, // user logueado
          items: [],
          progress: 0
-
       };
 
       updateListData(newList);

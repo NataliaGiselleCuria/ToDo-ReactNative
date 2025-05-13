@@ -1,17 +1,15 @@
-import React, { use, useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
+import type { RootStackParamList } from '../../types/navigationTypes';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { StyleSheet, View, } from 'react-native'
 import { RouteProp, useNavigation } from '@react-navigation/native';
-import { categoryItemName, List } from '../../types/types';
 import { useListContext } from '../../context/lists/ListContext';
 import { useTheme } from '../../context/ThemeContext';
+import { globalStyles } from '../../styles/globalStyles';
 import StyledContainer from '../../components/styledComponets/StyledContainer';
 import StyledText from '../../components/styledComponets/StyledText';
 import ItemPreview from '../../components/Item/ItemPreview';
-import CreateItemModal from '../../components/list/viewList/CreateItemModal';
-import EditListModal from './EditListScreen';
 import StyledContainerView from '../../components/styledComponets/StyledContainerView';
-import { StackNavigationProp } from '@react-navigation/stack';
-import type { RootStackParamList } from '../../types/navigationTypes';
 
 type ViewListRouteProp = RouteProp<RootStackParamList, 'ViewList'>;
 
@@ -20,6 +18,10 @@ type Props = {
 };
 
 const ViewListScreen: React.FC<Props> = ({ route }) => {
+   const { theme } = useTheme();
+   const gStyles = globalStyles(theme);
+   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
    //Lista actualizada desde el contexto
    const { getListById, lists } = useListContext();
    const { list: routeList } = route.params;
@@ -27,13 +29,6 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
    const listData = useMemo(() => {
       return getListById(routeList.id);
    }, [lists, routeList.id]);
-
-   const { decrementModalCount } = useTheme();
-   const [creatItemOpen, setCreatItemOpen] = useState(false);
-
-
-const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
-
 
    if (!listData) {
       return (
@@ -43,8 +38,6 @@ const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
       );
    }
 
-   const item = categoryItemName[listData.category];
-
    const handleEdit = () => {
       navigation.navigate('EditList', { list: listData });
    }
@@ -53,22 +46,13 @@ const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
       <StyledContainerView
          data={listData}
          onPressHeader={handleEdit}
-         onPressButtonAdd={() => setCreatItemOpen(true)}
+         onPressButtonAdd={() => navigation.navigate('CreateItem', { list: listData })}
       >
          <View style={styles.ContainerListItems}>
             {listData.items.map((item) => (
                <ItemPreview key={item.id} item={item} />
             ))}
-         </View>
-         {creatItemOpen && (
-            <CreateItemModal
-               type='create'
-               list={listData}
-               item={item}
-               visible={creatItemOpen}
-               onClose={() => { setCreatItemOpen(false); decrementModalCount() }}
-            />
-         )}
+         </View>      
       </StyledContainerView>
    )
 }

@@ -3,6 +3,7 @@ import { Item } from "../../types/types";
 import { useListContext } from "../lists/ListContext";
 
 interface ListContextType {
+    addItem: (idList: number, newItem: Item) => void;
     updateItem: (idList: number, id: number, updated: Partial<Item>) => void;
     deleteItem: (idList: number, id: number) => void;
     getItemById: (isList: number, id: number) => Item | undefined;
@@ -12,6 +13,14 @@ const ItemContext = createContext<ListContextType | undefined>(undefined);
 
 export const ItemProvider = ({ children }: { children: React.ReactNode }) => {
     const { getListById, updateList, lists } = useListContext();
+
+    const addItem = (idList: number, newItem: Item) => {
+        const list = getListById(idList);
+        if (!list) return;
+
+        const updatedItems = [...list.items, newItem];
+        updateList(idList, { items: updatedItems });
+    };
 
     const updateItem = (idList: number, id: number, updated: Partial<Item>) => {
         const list = getListById(idList);
@@ -23,38 +32,26 @@ export const ItemProvider = ({ children }: { children: React.ReactNode }) => {
 
         updateList(idList, { items: updatedItems });
 
-        //Acá lógica para actualizar la lista en MySql
-        // try {
-        //     await updateListInMySQL(id, updated); // lógica de update en base
-        //     setLists(prev =>
-        //         prev.map(list => list.id === id ? { ...list, ...updated } : list)
-        //     );
-        // } catch (err) {
-        //     console.error("Error al actualizar la lista:", err);
-        //     Alert.alert("Error", "No se pudo actualizar la lista.");
-        // }
     }
 
     const deleteItem = (idList: number, id: number) => {
         const list = getListById(idList);
         if (!list) return;
 
-        //Acá lógica para eliminar la lista    
-        // try {
-        //     await deleteListFromMySQL(id); // lógica de delete
-        //     setLists(prev => prev.filter(list => list.id !== id));
-        // } catch (err) {
-        //     console.error("Error al eliminar la lista:", err);
-        //     Alert.alert("Error", "No se pudo eliminar la lista.");
-        // } 
+        const updatedItems = list.items.filter(item => item.id !== id);
+        const updatedList = { ...list, items: updatedItems };
+
+        updateList(idList, updatedList);
+
     }
 
     const getItemById = (idList: number, id: number): Item | undefined => {
         const list = getListById(idList);
-        return list?.items.find(item => item.id === id);   
+        return list?.items.find(item => item.id === id);
     };
 
     const contextValue = useMemo(() => ({
+        addItem,
         updateItem,
         deleteItem,
         getItemById
