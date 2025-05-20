@@ -17,7 +17,6 @@ export const CreateItemProvider = ({ children }: { children: ReactNode }) => {
 
     const updateItemData = (data: Partial<Item>) => {
         setItemData(prev => ({ ...prev, ...data }));
-       
     };
 
     const resetItemData = () => setItemData({});

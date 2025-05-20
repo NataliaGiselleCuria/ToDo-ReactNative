@@ -17,6 +17,7 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
     const addList = (newList: List) => {
         setLists([...lists, newList]);
 
+         console.log('la lista fue guardada. El id del evento de esta lista es: ' + newList.idEventCalendar)
         //Acá lógica para guardar la lista en MySql
         // try {
         //     await saveListToDB(newList); // lógica de guardar en la base
@@ -29,7 +30,6 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
 
     const updateList = (id: number, updated: Partial<List>) => {
         setLists(prevLists => prevLists.map(list => list.id === id ? { ...list, ...updated } : list));
-        console.log('Nuevo item')
         //Acá lógica para actualizar la lista en MySql
         // try {
         //     await updateListInMySQL(id, updated); // lógica de update en base
@@ -40,6 +40,8 @@ export const ListProvider = ({ children }: { children: React.ReactNode }) => {
         //     console.error("Error al actualizar la lista:", err);
         //     Alert.alert("Error", "No se pudo actualizar la lista.");
         // }
+
+        console.log('la lista fue editada. El id del evento de esta lista es: ' + getListById(id)?.idEventCalendar)
     }
 
     const deleteList = (id: number) => {

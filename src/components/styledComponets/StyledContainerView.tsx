@@ -29,14 +29,6 @@ const StyledContainerView: React.FC<Props> = ({ data, list, children, style, onP
       return (data as List).participants !== undefined;
    };
 
-   useEffect (() => {
-     if (modalCount > 0){
-      console.log('background on')
-     }else{
-       console.log('background off')
-     }
-   }, [modalCount]);
-
    const isList = listData(data);
    const itemLabel = isList ? categoryItemName[data.category] : 'Nota';
    const navigation = useNavigation();

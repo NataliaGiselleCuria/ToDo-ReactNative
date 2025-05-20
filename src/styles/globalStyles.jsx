@@ -45,7 +45,6 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     flex: 1,
     position: 'absolute',
     zIndex: 99,
-    // height: '20000%',
     top: 0,
     left: 0,
     right: 0,
@@ -53,14 +52,9 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     backgroundColor: 'rgba(18, 20, 20, 0.86)',
   },
 
-  // modal: {
-  //   flex: 1,
-  //   alignItems: 'center',
-  //   justifyContent: 'center',
-  // },
-
   modalOverlay: {
     flex: 1,
+
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 10,
@@ -128,6 +122,7 @@ export const globalStyles = (theme = DefaultTheme) => StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     backgroundColor:theme.colors.background,
+
     shadowColor: theme.colors.shadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,

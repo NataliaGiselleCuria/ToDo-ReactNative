@@ -2,6 +2,8 @@ import { themes } from "../styles/theme";
 
 export type ThemeId = keyof typeof themes;
 
+//
+
 export interface User {
     id: number;
     username: string;
@@ -21,11 +23,13 @@ export interface List {
     scheduleStartDate: boolean;
     scheduleStartTime: boolean;
     startDate: Date;
-    startTime?:Date;
+    startTime?: Date;
     scheduleEndDate: boolean;
     scheduleEndTime: boolean;
     endDate?: Date;
-    endTime?:Date;
+    endTime?: Date;
+    allDay?: boolean;
+    idEventCalendar?: string
     participants: User[];
     permissions: PermissionsOptions;
     allowedUsers: User[];
@@ -45,11 +49,12 @@ export interface Item {
     scheduleStartDate: boolean;
     scheduleStartTime: boolean;
     startDate: Date;
-    startTime?:Date;
+    startTime?: Date;
     scheduleEndDate: boolean;
     scheduleEndTime: boolean;
     endDate?: Date;
-    endTime?:Date;
+    endTime?: Date;
+    idEventCalendar?: string
     duration?: string;
     state: ItemState;
     assignment?: User[];
@@ -58,6 +63,9 @@ export interface Item {
     priority?: Priority;
     record: HistoryChanges[]
 }
+
+
+// 
 
 export interface Note {
     id: number;
@@ -126,7 +134,38 @@ export const colorMapPriority = {
     [Priority.low]: 'rgb(100, 155, 121)',
     [Priority.medium]: 'rgb(221, 182, 96)',
     [Priority.high]: 'rgb(202, 86, 86)',
- }
+}
+
+
+
+// Calendario
+export interface CalendarData {
+    idEventCalendar?: string;
+    name?: string;
+    description?: string;
+    startDate?: Date;
+    startTime?: Date;
+    endDate?: Date;
+    endTime?: Date;
+    allDay?: boolean;
+}
+
+export interface EventConfigDates {
+    startDateEvent?: Date;
+    endDateEvent?: Date;
+    allDay?: boolean;
+}
+
+export interface CalendarEventData {
+    idEventCalendar?: string;
+    title: string;
+    description?: string;
+    startDate?: Date;
+    endDate?: Date;
+    allDay?: boolean;
+}
+
+//
 
 export interface UserPreferences {
     listId: number;

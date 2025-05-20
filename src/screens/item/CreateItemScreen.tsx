@@ -6,16 +6,14 @@ import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
 import { useCreateItem } from '../../context/items/CreateItemContext';
 import { useItemContext } from '../../context/items/ItemContext';
-import { useDatesSchedule } from '../../hooks/useDateScheduler';
-import { useDateRangeValidation } from '../../hooks/useDateRangeValidation';
-import { categoryItemName, ItemState } from '../../types/types';
+import { categoryItemName, Item, ItemState } from '../../types/types';
 import { useCalendarPermission } from '../../hooks/useCalendarPermissions';
 import ConfirmCancelButtons from '../../components/ConfirmCancelButtons';
 import StyledContainer from '../../components/styledComponets/StyledContainer';
 import ItemForm from '../../components/Item/ItemForm';
 
 import { loggedUser } from '../../services/mockUsers';
-
+import { useListContext } from '../../context/lists/ListContext';
 
 type CreateItemRouteProp = RouteProp<RootStackParamList, 'CreateItem'>;
 
@@ -26,31 +24,38 @@ type Props = {
 const CreateItemScreen: React.FC<Props> = ({ route }) => {
    const { theme, modalCount } = useTheme();
    const gStyles = globalStyles(theme);
-   const { list } = route.params;
-   const { itemData, resetItemData } = useCreateItem();
+   const { updateItemData, itemData, resetItemData } = useCreateItem();
+   const { getListById } = useListContext();
    const { addItem } = useItemContext();
-   const { openPermissionModal, CalendarPermissionModal } = useCalendarPermission(list);
+   const { openPermissionModal, CalendarPermissionModal } = useCalendarPermission();
    const navigation = useNavigation();
 
-   const { validateStartDate, validateEndDate } = useDateRangeValidation({
-      minDate: list.startDate || undefined,
-      maxDate: list.endDate || undefined,
-      isTime: true
-   });
+   const { listId } = route.params;
+   const list = getListById(listId);
 
-   const {
-      scheduleStartDate, scheduleEndDate,
-      startDate, endDate,
-      scheduleStartTime, scheduleEndTime,
-      startTime, endTime,
-   } = useDatesSchedule(itemData, validateStartDate, validateEndDate)
+   if (!list) {
+      return
+   };
 
    const handleOnClose = () => {
       navigation.goBack()
       resetItemData();
    };
 
-   const AddNewItem = () => {
+   const handleConfirm = () => {
+      openPermissionModal(
+         { ...itemData },
+         (newEventId) => {
+            AddNewItem(newEventId);
+            resetItemData();
+            handleOnClose();
+         },
+         'add'
+      );
+   }
+
+   const AddNewItem = (calendarEventId?: string) => {
+
       const newItem = {
          ...itemData,
          idList: list.id,
@@ -60,14 +65,18 @@ const CreateItemScreen: React.FC<Props> = ({ route }) => {
          description: itemData.description ?? "",
          duration: itemData.duration ?? "",
          createdBy: loggedUser, // user logueado
-         scheduleStartDate: scheduleStartDate || false,
-         scheduleStartTime: scheduleStartTime || false,
-         scheduleEndDate: scheduleEndDate || false,
-         scheduleEndTime: scheduleEndTime || false,
-         startTime: startTime ?? undefined,
-         endTime: endTime ?? undefined,
-         startDate: startDate ?? new Date(),
-         endDate: endDate ?? undefined,
+
+         scheduleStartDate: itemData.scheduleStartDate || false,
+         scheduleStartTime: itemData.scheduleStartTime || false,
+         startDate: itemData.startDate ?? new Date(),
+         startTime: itemData.startTime ?? undefined,
+
+         scheduleEndDate: itemData.scheduleEndDate || false,
+         scheduleEndTime: itemData.scheduleEndTime || false,
+         endDate: itemData.endDate ?? undefined,
+         endTime: itemData.endTime ?? undefined,
+
+         calendarEventId: calendarEventId,
          assignment: itemData.assignment || undefined,
          priority: itemData.priority ?? undefined,
          state: 'No completado' as ItemState,
@@ -75,11 +84,7 @@ const CreateItemScreen: React.FC<Props> = ({ route }) => {
          record: []
       };
 
-      openPermissionModal(() => {
-         addItem(list.id, newItem);
-         resetItemData();
-         handleOnClose();
-      });
+      addItem(list.id, newItem);
    };
 
    return (
@@ -88,15 +93,15 @@ const CreateItemScreen: React.FC<Props> = ({ route }) => {
          behavior={Platform.OS === "ios" ? "padding" : "height"}
          keyboardVerticalOffset={Platform.OS === "ios" ? 0 : -200}
       >
-         <StyledContainer scroll={true} style={{paddingBottom: 50}}>
+         <StyledContainer scroll={true} style={{ paddingBottom: 90 }}>
 
-            <ItemForm type="create" list={list} item={categoryItemName[list.category]} />
-         
+            <ItemForm type="create" list={list} item={itemData as Item} />
+
          </StyledContainer>
          <ConfirmCancelButtons
-               handleSave={AddNewItem}
-               handleCancel={handleOnClose}
-            />
+            handleSave={handleConfirm}
+            handleCancel={handleOnClose}
+         />
          <CalendarPermissionModal />
          {modalCount > 0 && <View style={gStyles.modalBack}></View>}
       </KeyboardAvoidingView>

@@ -39,14 +39,14 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
    }
 
    const handleEdit = () => {
-      navigation.navigate('EditList', { list: listData });
+      navigation.navigate('EditList', {  listId: listData.id });
    }
 
    return (
       <StyledContainerView
          data={listData}
          onPressHeader={handleEdit}
-         onPressButtonAdd={() => navigation.navigate('CreateItem', { list: listData })}
+         onPressButtonAdd={() => navigation.navigate('CreateItem', {  listId: listData.id })}
       >
          <View style={styles.ContainerListItems}>
             {listData.items.map((item) => (

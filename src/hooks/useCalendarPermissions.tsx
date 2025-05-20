@@ -1,59 +1,180 @@
 import { useState } from 'react';
-import { Modal, View, Text, Button } from 'react-native';
-import { addToSystemCalendar } from '../utils/calendarUtils';
+import { Modal, View, Text, Button, Alert } from 'react-native';
+import { addToSystemCalendar, editCalendarEvent, deleteCalendarEvent } from '../utils/calendarUtils';
 import { useTheme } from '../context/ThemeContext';
 import { globalStyles } from '../styles/globalStyles';
+import { combineDateAndTime } from '../utils/dateUtils';
+import { CalendarData, EventConfigDates } from '../types/types';
+import StyledAlert from '../components/styledComponets/StyledAlert';
 
-export const useCalendarPermission = (listData: any) => {
-  const { theme, incrementModalCount, decrementModalCount } = useTheme();
-  const gStyles = globalStyles(theme);
-  const [permissionShowModal, setPermissionShowModal] = useState(false);
-  const [onFinish, setOnFinish] = useState<() => void>(() => () => { });
+export const useCalendarPermission = () => {
+   const { theme, incrementModalCount, decrementModalCount } = useTheme();
+   const gStyles = globalStyles(theme);
+   const [permissionShowModal, setPermissionShowModal] = useState(false);
+   const [onFinish, setOnFinish] = useState<(newEventId?: string) => void>(() => () => { });
+   const [calendarData, setCalendarData] = useState<any>(null);
+   const [calendarAction, setCalendarAction] = useState<'add' | 'edit' | 'delete'>('add');
 
-  const openPermissionModal = (callback: () => void) => {
-    setOnFinish(() => callback);
-    setPermissionShowModal(true);
-    incrementModalCount()
-  };
+   const openPermissionModal = (
+      data: any,
+      callback: (success: boolean, newEventId?: string) => void,
+      mode: 'add' | 'edit' | 'delete',
+   ) => {
+      setCalendarData(data);
+      setOnFinish(() => (newEventId?: string) => callback(true, newEventId));
+      setPermissionShowModal(true);
+      setCalendarAction(mode);
+      incrementModalCount()
+   };
 
-  const confirmAddToCalendar = async () => {
-    try {
-      if (listData?.startDate) {
-        await addToSystemCalendar(`${listData.name} (Inicio)`, listData.startDate);
+   const confirmAddToCalendar = async (): Promise<boolean | undefined> => {
+
+      const eventConfigDates = getEventConfigDates(calendarData)
+
+      const eventCalendarData = {
+         idEventCalendar: calendarData.idEventCalendar ?? null,
+         title: calendarData.name,
+         description: calendarData.description,
+         startDate: eventConfigDates.startDateEvent,
+         endDate: eventConfigDates.endDateEvent,
+         allDay: eventConfigDates.allDay,
+      };
+
+      try {
+         if (calendarAction === 'edit' && calendarData.idEventCalendar) {
+            const calendarResult = await editCalendarEvent(eventCalendarData);
+
+             console.log (calendarResult)
+            if (calendarResult.success) {
+               onFinish?.(calendarResult.eventIdentifier);
+               return true;
+            } else {
+               return false;
+            }
+
+         } else if (calendarAction === 'delete' && calendarData.idEventCalendar) {
+            const calendarResult = await deleteCalendarEvent(calendarData.calendarEventId);
+
+            if (calendarResult.success) {
+               onFinish?.();
+               return true;
+            } else {
+               return false;
+            }
+
+         } else if (calendarAction === 'add') {
+
+            const newEventIdResult = await addToSystemCalendar(eventCalendarData);
+
+            if (newEventIdResult.success) {
+               onFinish?.(newEventIdResult.eventIdentifier);
+               return true;
+            } else {
+               onFinish?.();
+               return false;
+            }
+         }
+      } catch (err) {        
+         onFinish?.();
+         return false;
+
+      } finally {
+         setPermissionShowModal(false);
+         decrementModalCount();
+         setCalendarData(null);
+         setCalendarAction('add');
       }
-      if (listData?.endDate) {
-        await addToSystemCalendar(`${listData.name} (Fin)`, listData.endDate);
+   };
+
+   const handlePermissions = async (shouldDo: boolean): Promise<boolean> => {
+      setPermissionShowModal(false);
+      decrementModalCount();
+
+      if (shouldDo) {
+         await confirmAddToCalendar();
+         return true
+      } else {
+         onFinish?.();
+         return false
       }
-    } catch (err) {
-      console.warn('No se pudo agregar al calendario', err);
-    }
-  };
+   };
 
-  const handlePermissions = async (shouldAdd: boolean) => {
-    setPermissionShowModal(false);
-    decrementModalCount()
+   const getModalMessage = () => {
+      switch (calendarAction) {
+         case 'edit':
+            return '¿Querés editar este evento en el calendario del sistema?';
+         case 'delete':
+            return '¿Querés eliminar este evento del calendario del sistema?';
+         default:
+            return '¿Querés agregar esta lista al calendario del sistema?';
+      }
+   };
 
-    if (shouldAdd) {
-      await confirmAddToCalendar();
-    }
+   const getConfirmationButtonText = () => {
+      switch (calendarAction) {
+         case 'edit':
+            return 'Sí, editar';
+         case 'delete':
+            return 'Sí, eliminar';
+         default:
+            return 'Sí, agregar';
+      }
+   };
 
-    onFinish?.();
-  };
+   const getEventConfigDates = (calendarData: CalendarData): EventConfigDates => {
+      let startDateEvent;
+      let endDateEvent;
+      let allDay = false;
 
-  const CalendarPermissionModal = () => (
-      <Modal visible={permissionShowModal} transparent animationType="fade">
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 10, gap: 10 }}>
-            <Text>¿Querés agregar esta lista al calendario del sistema?</Text>
-            <Button title="Sí, agregar" onPress={() => handlePermissions(true)} />
-            <Button title="No" onPress={() => handlePermissions(false)} />
-          </View>
-        </View>
-      </Modal>
-  );
+      if (calendarData?.startDate) { //si hay fecha de inicio -> si tiene hora se concatena, si no solo es la fecha,
+         startDateEvent =
+            calendarData?.startTime
+               ? combineDateAndTime(calendarData.startDate, calendarData.startTime)
+               : calendarData.startDate;
 
-  return {
-    openPermissionModal,
-    CalendarPermissionModal,
-  };
-};
+         if (!calendarData.startTime && !calendarData.endTime && !calendarData.endDate) { // si solo hay fecha de inicio se setea fecha de fin para el mismo dia -todo el dia-
+            allDay = true;
+            endDateEvent = startDateEvent;
+         }
+      };
+
+      if (calendarData?.endDate) { //si hay fecha de fin -> si tiene hora se concatena, si no solo es la fecha,
+         endDateEvent =
+            calendarData?.endTime
+               ? combineDateAndTime(calendarData.endDate, calendarData.endTime,)
+               : calendarData.endDate;
+      };
+
+      if ((calendarData?.startDate && calendarData?.endDate) && (!calendarData?.startTime && !calendarData?.endTime)) { // si solo hay fecha de inicio y fin  se setea -todo el dia- para ambos
+         allDay = true;
+      };
+
+      return {
+         startDateEvent,
+         endDateEvent,
+         allDay,
+      };
+   };
+
+
+   const CalendarPermissionModal = () => (
+      <StyledAlert
+         visible={permissionShowModal}
+         message={getModalMessage()}
+         onClose={() => handlePermissions(false)}
+         buttons={[
+            {
+               text: getConfirmationButtonText(),
+               onPress: () => handlePermissions(true)
+            },
+            { text: 'No', onPress: () => handlePermissions(false) }
+         ]}>
+
+      </StyledAlert>
+   );
+
+   return {
+      openPermissionModal,
+      CalendarPermissionModal,
+   };
+}

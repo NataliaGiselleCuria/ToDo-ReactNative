@@ -73,21 +73,17 @@ const AddNoteModal = ({ item, visible, onClose }: Props) => {
 
       try {
          const uri = await audioRecorderPlayer.startRecorder();
-         console.log('Grabando en:', uri);
          setRecording(true);
       } catch (err) {
-         console.error('Error al iniciar grabación', err);
       }
    };
 
    const handleStopRecording = async () => {
       try {
          const uri = await audioRecorderPlayer.stopRecorder();
-         console.log('Audio grabado en:', uri);
          setAudioUri(uri);
          setRecording(false);
       } catch (err) {
-         console.error('Error al detener la grabación', err);
       }
    };
 

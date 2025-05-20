@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo } from "react";
 import { StyleSheet, View, } from 'react-native'
 import { globalStyles } from "../../styles/globalStyles";
 import { useCreateItem } from "../../context/items/CreateItemContext";
 import { useTheme } from "../../context/ThemeContext";
-import { List } from "../../types/types";
+import { categoryItemName, Item, List } from "../../types/types";
 import StyledText from "../styledComponets/StyledText";
 import ParticipantsList from "../participants/ParticipantsList";
 import OptionsListLayout from "../OptionsListLayout";
@@ -15,7 +15,7 @@ import { useDateRangeValidation } from "../../hooks/useDateRangeValidation";
 type ItemFormProps = {
     type: 'create' | 'edit';
     list: List;
-    item: string;
+    item: Item;
 };
 
 const ItemForm: React.FC<ItemFormProps> = ({ type, list, item }) => {
@@ -23,41 +23,58 @@ const ItemForm: React.FC<ItemFormProps> = ({ type, list, item }) => {
     const gStyles = globalStyles(theme);
     const { updateItemData, itemData } = useCreateItem();
 
-
     const { validateStartDate, validateEndDate } = useDateRangeValidation({
         minDate: list.startDate || undefined,
         maxDate: list.endDate || undefined,
-        isTime: true
+        isItem: true
     });
 
     const {
         startDate, startTime, endDate, endTime,
         scheduleStartDate, scheduleStartTime, scheduleEndDate, scheduleEndTime, setScheduleEndTime,
         handleDateChange
-    } = useDatesSchedule(itemData, validateStartDate, validateEndDate)
+    } = useDatesSchedule(item, validateStartDate, validateEndDate)
 
-    const handleStartDateChange = (date: Date | undefined) =>
-        handleDateChange('startDate', date, validateStartDate);
+    const handleStartDateChange = useCallback(
+        (date: Date | undefined) => handleDateChange('startDate', date, validateStartDate),
+        [handleDateChange, validateStartDate]
+    );
 
-    const handleStartTimeChange = (date: Date | undefined) =>
-        handleDateChange('startTime', date, validateEndDate);
+    const handleStartTimeChange = useCallback(
+        (date: Date | undefined) => handleDateChange('startTime', date, validateEndDate),
+        [handleDateChange, validateEndDate]
+    );
 
-    const handleEndDateChange = (date: Date | undefined) =>
-        handleDateChange('endDate', date, validateEndDate);
+    const handleEndDateChange = useCallback(
+        (date: Date | undefined) => handleDateChange('endDate', date, validateEndDate),
+        [handleDateChange, validateEndDate]
+    );
 
-    const handleEndTimeChange = (date: Date | undefined) =>
-        handleDateChange('endTime', date, validateEndDate);
+    const handleEndTimeChange = useCallback(
+        (date: Date | undefined) => handleDateChange('endTime', date, validateEndDate),
+        [handleDateChange, validateEndDate]
+    );
 
     const handleChange = (field: keyof typeof itemData, value: any) => {
         updateItemData({ [field]: value });
-        !scheduleEndDate && setScheduleEndTime(false);
+        if (field === 'scheduleEndDate' && !value) {
+            setScheduleEndTime(false);
+        }
     };
+
+    const handleUpdate = (data: Partial<typeof itemData>) => {
+        updateItemData(data);
+    };
+
+    useEffect(() => {
+        handleUpdate({ endDate, startDate, scheduleStartDate, scheduleEndDate, scheduleStartTime, scheduleEndTime, startTime, endTime })
+    }, [endDate, startDate, scheduleStartDate, scheduleEndDate, scheduleStartTime, scheduleEndTime, startTime, endTime]);
 
     return (
 
         <View style={[gStyles.gapContainer, styles.container]}>
             <StyledText size="xlg">
-                {type === 'create' ? 'AGREGAR' : 'EDITAR'} {item.toLocaleUpperCase()}
+                {type === 'create' ? 'AGREGAR' : 'EDITAR'} {categoryItemName[list.category].toLocaleUpperCase()}
             </StyledText>
             <View style={gStyles.itemForm}>
                 <StyledText>Nombre</StyledText>
@@ -160,7 +177,8 @@ export default ItemForm;
 
 const styles = StyleSheet.create({
     container: {
-        paddingBottom: 100,
+        paddingBottom: 60,
+        paddingTop: 20,
     },
 
 })

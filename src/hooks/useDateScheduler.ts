@@ -1,14 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+interface InitialDates {
+    startDate?: Date | null;
+    startTime?: Date | null;
+    endDate?: Date | null;
+    endTime?: Date | null;
+    scheduleStartDate?: boolean;
+    scheduleStartTime?: boolean;
+    scheduleEndDate?: boolean;
+    scheduleEndTime?: boolean;
+}
 
 export function useDatesSchedule(
-    initial: {
-        startDate?: Date;
-        startTime?: Date;
-        endDate?: Date;
-        endTime?: Date;
-        minDate?: Date;
-        maxDate?: Date;
-    },
+    initial: InitialDates = {},
     validateStartDateFn: (
         startDate?: Date,
         startTime?: Date,
@@ -21,18 +25,19 @@ export function useDatesSchedule(
         endDate?: Date,
         endTime?: Date
     ) => { startDate?: Date; startTime?: Date; endDate?: Date; endTime?: Date },
-    
+
 ) {
 
-    const [startDate, setStartDate] = useState(initial.startDate);
-    const [startTime, setStartTime] = useState(initial.startTime);
-    const [endDate, setEndDate] = useState(initial.endDate);
-    const [endTime, setEndTime] = useState(initial.endTime);
+    const [startDate, setStartDate] = useState<Date | undefined>(initial.startDate || undefined);
+    const [startTime, setStartTime] = useState<Date | undefined>(initial.startTime || undefined);
+    const [endDate, setEndDate] = useState<Date | undefined>(initial.endDate || undefined);
+    const [endTime, setEndTime] = useState<Date | undefined>(initial.endTime || undefined);
 
-    const [scheduleStartDate, setScheduleStartDate] = useState(!!initial.startDate);
-    const [scheduleStartTime, setScheduleStartTime] = useState(!!initial.startTime);
-    const [scheduleEndDate, setScheduleEndDate] = useState(!!initial.endDate);
-    const [scheduleEndTime, setScheduleEndTime] = useState(!!initial.endTime);
+
+    const [scheduleStartDate, setScheduleStartDate] = useState(initial.scheduleStartDate ?? false);
+    const [scheduleStartTime, setScheduleStartTime] = useState(initial.scheduleStartTime ?? false);
+    const [scheduleEndDate, setScheduleEndDate] = useState(initial.scheduleEndDate ?? false);
+    const [scheduleEndTime, setScheduleEndTime] = useState(initial.scheduleEndTime ?? false);
 
     const handleDateChange = (
         type: 'startDate' | 'startTime' | 'endDate' | 'endTime',
@@ -51,27 +56,29 @@ export function useDatesSchedule(
                 newStartDate,
                 newStartTime,
                 newEndDate,
-                newEndTime,
-               
+                newEndTime
             );
-            setStartDate(validatedResult?.startDate);
-            setStartTime(validatedResult?.startTime);
+            setStartDate(validatedResult?.startDate || undefined);
+            setStartTime(validatedResult?.startTime || undefined);
         } else if (type === 'endDate' || type === 'endTime') {
             validatedResult = validateEndDateFn(
                 newStartDate,
                 newStartTime,
                 newEndDate,
-                newEndTime,
-               
+                newEndTime
             );
-            setEndDate(validatedResult?.endDate);
-            setEndTime(validatedResult?.endTime);
+            setEndDate(validatedResult?.endDate || undefined);
+            setEndTime(validatedResult?.endTime || undefined);
         }
 
-        setScheduleStartDate(!!validatedResult?.startDate);
-        setScheduleStartTime(!!validatedResult?.startTime);
-        setScheduleEndDate(!!validatedResult?.endDate);
-        setScheduleEndTime(!!validatedResult?.endTime);
+        if (type === 'startDate') setScheduleStartDate(!!value);
+        if (type === 'startTime') setScheduleStartTime(!!value);
+        if (type === 'endDate') setScheduleEndDate(!!value);
+        if (type === 'endTime') setScheduleEndTime(!!value);
+
+
+
+
     };
 
     return {

@@ -1,6 +1,6 @@
-import { StyleSheet, TouchableOpacity, View, } from 'react-native'
+import { BackHandler, StyleSheet, TouchableOpacity, View, } from 'react-native'
 import React, { useMemo, useState } from 'react'
-import { RouteProp, useNavigation } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../types/navigationTypes';
 import { useItemContext } from '../../context/items/ItemContext';
@@ -13,6 +13,7 @@ import StyledIcon from '../../components/styledComponets/StyledIcon';
 import ItemModal from '../../components/Item/viewItem/ItemModal';
 import AddNoteModal from '../../components/Item/viewItem/AddNoteModal';
 import StyledContainerView from '../../components/styledComponets/StyledContainerView';
+import usePreventGoBack from '../../hooks/usePreventGoBack';
 
 type ViewItemRouteProp = RouteProp<RootStackParamList, 'ViewItem'>;
 
@@ -21,7 +22,7 @@ type Props = {
 };
 
 const ViewItemScreen: React.FC<Props> = ({ route }) => {
-    const { theme, decrementModalCount, incrementModalCount} = useTheme();
+    const { theme, decrementModalCount, incrementModalCount } = useTheme();
     const gStyles = globalStyles(theme);
     const [openRecords, setOpenRecords] = useState(false);
     const [openNotes, setOpenNotes] = useState(false);
@@ -55,11 +56,13 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
         listData && itemData && navigation.navigate('EditItem', { list: listData, item: itemData })
     }
 
+    usePreventGoBack();
+
     return (
         <StyledContainerView
             data={itemData}
             onPressHeader={handleEdit}
-            onPressButtonAdd={() => {setAddNote(true); incrementModalCount()}}
+            onPressButtonAdd={() => { setAddNote(true); incrementModalCount() }}
             list={list}
         >
             <View style={[gStyles.rowBetween, { paddingHorizontal: 10 }]}>

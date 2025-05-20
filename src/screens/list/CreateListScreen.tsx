@@ -17,6 +17,8 @@ import StyledText from '../../components/styledComponets/StyledText'
 import CreateListButton from '../../components/list/CreateListButton'
 import FormStepOne from '../../components/list/FormStepOne'
 import FormStepTwo from '../../components/list/FormStepTwo'
+import usePreventGoBack from '../../hooks/usePreventGoBack'
+import StyledAlert from '../../components/styledComponets/StyledAlert'
 
 const CreateListScreen = () => {
 
@@ -26,18 +28,12 @@ const CreateListScreen = () => {
    const { updateListData, listData, resetListData } = useCreateList();
    const { addList } = useListContext();
    const [step, setStep] = useState(1);
-   const { openPermissionModal, CalendarPermissionModal } = useCalendarPermission(listData);
+   const { openPermissionModal, CalendarPermissionModal } = useCalendarPermission();
+   const [alertVisible, setAlertVisible] = React.useState(false);
+   const [alertMessage, setAlertMessage] = useState('');
+   const [alertType, setAlertType] = useState<'Éxito' | 'Error'>('Éxito');
 
-   //Evitar que se pueda volver atrás con los gestos del mobil -> forzar a usar el botón 'cancelar'
-   useFocusEffect(
-      React.useCallback(() => {
-         const onBackPress = () => {
-            return true;
-         };
-         const subscription = BackHandler.addEventListener("hardwareBackPress", onBackPress);
-         return () => subscription.remove();
-      }, [])
-   );
+   usePreventGoBack();
 
    const getDefaultValuesStepOne = (listData: Partial<List>) => ({
       name: listData.name ?? "",
@@ -70,22 +66,33 @@ const CreateListScreen = () => {
       } else {
          listData.startDate === undefined && (listData.startDate = new Date());
 
-         openPermissionModal(() => {
-            AddNewList();
-            resetListData();
-            decrementModalCount();
-            cancelToHome();
-         });
+         openPermissionModal(
+            { ...listData },
+            (success, newEventId) => {
+               AddNewList(newEventId);
+               resetListData();
+               decrementModalCount();
+               cancelToHome();
+
+               if (!success) {
+                  setAlertMessage('La lista fue creada, pero no se pudo añadir el evento al calendario.');
+                  setAlertType('Error');
+                  setAlertVisible(true);
+               }
+            },
+            'add'
+         );
       }
    };
 
-   const AddNewList = () => { 
+   const AddNewList = (idEventCalendar?: string) => {
       const newList = {
          ...listData,
          id: Date.now(),
          createdBy: loggedUser, // user logueado
          items: [],
-         progress: 0
+         progress: 0,
+         idEventCalendar: idEventCalendar,
       };
 
       updateListData(newList);
@@ -137,6 +144,13 @@ const CreateListScreen = () => {
             <CreateListButton onPress={handleNext} title={step === 2 ? "CREAR LISTA" : "SIGUIENTE"} />
          </LinearGradient>
          <CalendarPermissionModal />
+         <StyledAlert
+            visible={alertVisible}
+            onClose={() => setAlertVisible(!alertVisible)}
+            title={alertType}
+            message={alertMessage}
+            buttons={[{ text: 'Ok', onPress: () => setAlertVisible(!alertVisible) }]}
+         />
          {modalCount > 0 && <View style={gStyles.modalBack}></View>}
       </KeyboardAvoidingView>
    )
@@ -167,7 +181,7 @@ const styles = StyleSheet.create({
       width: '110%',
    },
    gradientTop: {
-      paddingTop: 10, 
+      paddingTop: 10,
       paddingLeft: 20,
       height: 120,
       width: '100%',
