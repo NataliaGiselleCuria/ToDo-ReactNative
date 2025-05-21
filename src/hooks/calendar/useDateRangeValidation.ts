@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Alert } from "react-native";
-import { combineDateAndTime, getDateString } from "../../src/utils/dateUtils";
+import { combineDateAndTime } from "../../utils/dateUtils";
 
 interface DateRangeValidationProps {
    minDate?: Date; // fecha mínima permitida (por ejemplo, startDate de la lista)

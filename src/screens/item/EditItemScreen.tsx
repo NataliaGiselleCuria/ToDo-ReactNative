@@ -1,18 +1,21 @@
-import { useEffect } from "react";
-import { Alert, TouchableOpacity, View, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { TouchableOpacity, View, StyleSheet } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp, useNavigation } from "@react-navigation/native";
 import { useCreateItem } from "../../context/items/CreateItemContext";
 import { useItemContext } from "../../context/items/ItemContext";
-import { categoryItemName } from "../../types/types";
 import { RootStackParamList } from "../../types/navigationTypes";
 import { useTheme } from "../../context/ThemeContext";
 import { globalStyles } from "../../styles/globalStyles";
+import { deleteCalendarEvent } from '../../utils/calendarUtils';
+import { useAlert } from "../../hooks/calendar/useAlert";
+import { useCalendarIntegration } from "../../hooks/calendar/useCalendarIntegration";
+import { Item } from "../../types/types";
 import StyledContainer from "../../components/styledComponets/StyledContainer";
 import ConfirmCancelButtons from "../../components/ConfirmCancelButtons";
 import ItemForm from "../../components/Item/ItemForm";
 import StyledText from "../../components/styledComponets/StyledText";
-import { useCalendarPermission } from "../../hooks/useCalendarPermissions";
+import StyledAlert from "../../components/styledComponets/StyledAlert";
 
 type EditItemRouteProp = RouteProp<RootStackParamList, 'EditItem'>;
 
@@ -22,11 +25,13 @@ type Props = {
 
 const EditItemScreen: React.FC<Props> = ({ route }) => {
    const { theme, decrementModalCount, modalCount } = useTheme();
-   const gStyles = globalStyles(theme);
-   const { openPermissionModal, CalendarPermissionModal } = useCalendarPermission();
    const { item, list } = route.params;
    const { updateItem, deleteItem } = useItemContext();
    const { updateItemData, resetItemData, itemData } = useCreateItem();
+   const { alertVisible, alertMessage, alertType, showAlert, hideAlert } = useAlert();
+   const { executeCalendarAction, CalendarAlerts, CalendarPermissionModal } = useCalendarIntegration();
+   const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
+   const gStyles = globalStyles(theme);
    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
    useEffect(() => {
@@ -34,43 +39,60 @@ const EditItemScreen: React.FC<Props> = ({ route }) => {
    }, [list, item]);
 
    const handleSave = () => {
-      openPermissionModal(
-         { ...itemData },
-         () => {
-            updateItem(list.id, item.id, itemData);
-            handleCancel()
-         },
-         'edit'
-      );
+      if (itemData.idEventCalendar) {
+         executeCalendarAction({
+            data: { ...itemData as Item },
+            action: 'edit',
+            onSuccess: (newEventId) => {
+               editItem(newEventId);
+               handleCancel();
+            },
+         });
+      } else {
+         editItem()
+         handleCancel();
+      }
+   };
 
+   const editItem = async (newidEventCalendar?: string) => {
+      const itemDataToUpdate = {
+         ...itemData,
+         idEventCalendar: newidEventCalendar
+      }
+
+      updateItemData(itemDataToUpdate);
+      const result = await updateItem(list.id, item.id, itemDataToUpdate);
+
+      if (!result) {
+         showAlert('No se pudo guardar el ítem', 'Error');
+         setTimeout(() => hideAlert(), 1500);
+      }
+   }
+
+   const handleDelete = () => {
+      setDeleteConfirmationVisible(true);
+   };
+
+   const confirmDelete = () => {
+      if (list && itemData.id) {
+         deleteItem(list.id, itemData.id);
+         if (itemData.idEventCalendar) {
+            deleteCalendarEvent(itemData.idEventCalendar);
+         }
+         handleCancel();
+      }
+
+      setDeleteConfirmationVisible(false);
+   };
+
+   const cancelDelete = () => {
+      setDeleteConfirmationVisible(false);
    };
 
    const handleCancel = () => {
       resetItemData();
       decrementModalCount();
       navigation.navigate('ViewList', { list: list });
-   };
-
-   const handleDelete = () => {
-      Alert.alert(
-         `¿Eliminar ${categoryItemName[list.category]}?`,
-         'Esta acción no se puede deshacer.',
-         [
-            {
-               text: 'Cancelar',
-               style: 'cancel',
-            },
-            {
-               text: 'Eliminar',
-               style: 'destructive',
-               onPress: () => {
-                  deleteItem(list.id, item.id);
-                  handleCancel();
-               },
-            },
-         ],
-         { cancelable: true }
-      );
    };
 
    return (
@@ -88,6 +110,23 @@ const EditItemScreen: React.FC<Props> = ({ route }) => {
             handleCancel={handleCancel}
          />
          <CalendarPermissionModal />
+         <CalendarAlerts />
+         <StyledAlert
+            visible={deleteConfirmationVisible}
+            onClose={cancelDelete}
+            title="¿Eliminar lista?"
+            message="Esta acción no se puede deshacer."
+            buttons={[
+               { text: 'Cancelar', onPress: cancelDelete, style: { backgroundColor: 'gray' } },
+               { text: 'Eliminar', onPress: confirmDelete, style: { backgroundColor: 'red' } },
+            ]}
+         />
+         <StyledAlert
+            visible={alertVisible}
+            onClose={hideAlert}
+            title={alertType}
+            message={alertMessage}
+         />
          {modalCount > 0 && <View style={gStyles.modalBack}></View>}
       </>
    );

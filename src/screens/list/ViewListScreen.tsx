@@ -10,6 +10,7 @@ import StyledContainer from '../../components/styledComponets/StyledContainer';
 import StyledText from '../../components/styledComponets/StyledText';
 import ItemPreview from '../../components/Item/ItemPreview';
 import StyledContainerView from '../../components/styledComponets/StyledContainerView';
+import usePreventGoBack from '../../hooks/usePreventGoBack';
 
 type ViewListRouteProp = RouteProp<RootStackParamList, 'ViewList'>;
 
@@ -26,6 +27,8 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
    const { getListById, lists } = useListContext();
    const { list: routeList } = route.params;
 
+   usePreventGoBack();
+
    const listData = useMemo(() => {
       return getListById(routeList.id);
    }, [lists, routeList.id]);
@@ -39,20 +42,20 @@ const ViewListScreen: React.FC<Props> = ({ route }) => {
    }
 
    const handleEdit = () => {
-      navigation.navigate('EditList', {  listId: listData.id });
+      navigation.navigate('EditList', { listId: listData.id });
    }
 
    return (
       <StyledContainerView
          data={listData}
          onPressHeader={handleEdit}
-         onPressButtonAdd={() => navigation.navigate('CreateItem', {  listId: listData.id })}
+         onPressButtonAdd={() => navigation.navigate('CreateItem', { listId: listData.id })}
       >
          <View style={styles.ContainerListItems}>
             {listData.items.map((item) => (
                <ItemPreview key={item.id} item={item} />
             ))}
-         </View>      
+         </View>
       </StyledContainerView>
    )
 }

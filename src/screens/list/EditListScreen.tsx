@@ -1,20 +1,22 @@
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import React, { useState } from 'react'
 import type { RootStackParamList } from '../../types/navigationTypes';
 import { RouteProp, useNavigation } from '@react-navigation/native';
-import { CalendarData, List } from '../../types/types';
+import { List } from '../../types/types';
 import { useListContext } from '../../context/lists/ListContext';
 import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
 import { useCancelToHome } from '../../hooks/useCancelToHome';
+import { deleteCalendarEvent } from '../../utils/calendarUtils';
+import { useCalendarIntegration } from '../../hooks/calendar/useCalendarIntegration';
+import { useAlert } from '../../hooks/calendar/useAlert';
 import StyledText from '../../components/styledComponets/StyledText';
 import FormStepOne from '../../components/list/FormStepOne';
 import FormStepTwo from '../../components/list/FormStepTwo';
 import StyledContainer from '../../components/styledComponets/StyledContainer';
 import ConfirmCancelButtons from '../../components/ConfirmCancelButtons';
-import { useCalendarPermission } from '../../hooks/useCalendarPermissions';
 import StyledAlert from '../../components/styledComponets/StyledAlert';
-import { deleteCalendarEvent } from '../../utils/calendarUtils';
+import usePreventGoBack from '../../hooks/usePreventGoBack';
 
 type EditListRouteProp = RouteProp<RootStackParamList, 'EditList'>;
 
@@ -29,16 +31,15 @@ const EditListScreen: React.FC<Props> = ({ route }) => {
    const cancelToHome = useCancelToHome();
 
    const { updateList, deleteList, getListById } = useListContext();
-   const { openPermissionModal, CalendarPermissionModal } = useCalendarPermission();
-   const [alertVisible, setAlertVisible] = React.useState(false);
-   const [alertMessage, setAlertMessage] = useState('');
-   const [alertType, setAlertType] = useState<'Éxito' | 'Error'>('Éxito');
-
+   const { alertVisible, alertMessage, alertType, showAlert, hideAlert } = useAlert();
+   const { executeCalendarAction, CalendarAlerts, CalendarPermissionModal } = useCalendarIntegration();
    const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false);
 
    const { listId } = route.params;
    const list = getListById(listId);
    const [formData, setFormData] = useState(list);
+
+    usePreventGoBack();
 
    const handleUpdate = (data: Partial<List>) => {
       setFormData(prev => prev ? ({ ...prev, ...data }) : data as List);
@@ -46,61 +47,41 @@ const EditListScreen: React.FC<Props> = ({ route }) => {
 
    const handleSave = () => {
       if (formData) {
-
-         const dataCalendar: CalendarData = {
-            idEventCalendar: formData.idEventCalendar,
-            name: formData.name,
-            description: formData.description,
-            startDate: formData.startDate,
-            startTime: formData.startTime,
-            endDate: formData.endDate,
-            endTime: formData.endTime,
-         };
-
-         openPermissionModal(
-            { ...dataCalendar },
-            (success, newEventId) => {
-               editList(newEventId)
-
-               if (success) {
-                  setAlertMessage('La lista fue editada con éxito.');
-                  setAlertType('Éxito');
-                  setAlertVisible(true);
-
-               } else {
-                  setAlertMessage('La lista fue editada, pero no se pudo editar el evento en el calendario.');
-                  setAlertType('Error');
-                  setAlertVisible(true);
-               }
-
-               setTimeout(() => {
+         if (formData.idEventCalendar) {
+            executeCalendarAction({
+               data: { ...formData as List },
+               action: 'edit',
+               onSuccess: (newEventId) => {
+                  editList(newEventId);
                   handleCancel();
-               }, 1500);
-            },
-            'edit'
-         );
+               },
+            });
+         } else {
+            editList()
+            handleCancel();
+         }
       }
    };
 
-   const editList = (newidEventCalendar?: string) => {
+   const editList = async (newidEventCalendar?: string) => {
       if (formData) {
          const formDataToUpdate = {
             ...formData,
             idEventCalendar: newidEventCalendar
-         }
+         };
 
          setFormData(formDataToUpdate);
-         updateList(formData.id, formDataToUpdate);
+         const result = await updateList(formData.id, formDataToUpdate);
+
+         if (!result) {
+            showAlert('No se pudo actualizar la lista', 'Error');
+            setTimeout(() => hideAlert(), 1500);
+         }
 
       } else {
-         setAlertMessage('No se pudo actualizar la lista');
-         setAlertType('Error');
-         setAlertVisible(true);
+         showAlert('Datos inválidos', 'Error');
+         setTimeout(() => hideAlert(), 1500);
       }
-   }
-
-   const handleCancel = () => {
-      navigation.goBack();
    };
 
    const handleDelete = () => {
@@ -122,6 +103,10 @@ const EditListScreen: React.FC<Props> = ({ route }) => {
 
    const cancelDelete = () => {
       setDeleteConfirmationVisible(false);
+   };
+
+   const handleCancel = () => {
+      navigation.goBack();
    };
 
    if (!formData) {
@@ -152,13 +137,7 @@ const EditListScreen: React.FC<Props> = ({ route }) => {
             handleCancel={handleCancel}
          />
          <CalendarPermissionModal />
-         <StyledAlert
-            visible={alertVisible}
-            onClose={() => setAlertVisible(!alertVisible)}
-            title={alertType}
-            message={alertMessage}
-            buttons={[{ text: 'Ok', onPress: () => setAlertVisible(!alertVisible) }]}
-         />
+         <CalendarAlerts />
          <StyledAlert
             visible={deleteConfirmationVisible}
             onClose={cancelDelete}
@@ -168,6 +147,12 @@ const EditListScreen: React.FC<Props> = ({ route }) => {
                { text: 'Cancelar', onPress: cancelDelete, style: { backgroundColor: 'gray' } },
                { text: 'Eliminar', onPress: confirmDelete, style: { backgroundColor: 'red' } },
             ]}
+         />
+         <StyledAlert
+            visible={alertVisible}
+            onClose={hideAlert}
+            title={alertType}
+            message={alertMessage}
          />
          {modalCount > 0 && <View style={gStyles.modalBack}></View>}
       </>

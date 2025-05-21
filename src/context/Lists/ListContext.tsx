@@ -1,11 +1,13 @@
-import React, { createContext, useCallback, useContext, useEffect, useMemo } from "react";
+import React, { createContext, useContext, useMemo } from "react";
 import { List } from "../../types/types";
+
+type Result = { success: boolean; message?: string };
 
 interface ListContextType {
     lists: List[];
-    addList: (newList: List) => void;
-    updateList: (id: number, updated: Partial<List>) => void;
-    deleteList: (id: number) => void;
+    addList: (newList: List) => Promise<Result>;
+    updateList: (id: number, updated: Partial<List>) => Promise<Result>;
+    deleteList: (id: number) => Promise<Result>;
     getListById: (id: number) => List | undefined;
 }
 
@@ -14,52 +16,40 @@ const ListContext = createContext<ListContextType | undefined>(undefined);
 export const ListProvider = ({ children }: { children: React.ReactNode }) => {
     const [lists, setLists] = React.useState<List[]>([]);
 
-    const addList = (newList: List) => {
-        setLists([...lists, newList]);
+    const addList = async (newList: List): Promise<Result> => {
+        try {
+            // await saveListToDB(newList);
+            setLists([...lists, newList]);
+            return { success: true };
 
-         console.log('la lista fue guardada. El id del evento de esta lista es: ' + newList.idEventCalendar)
-        //Acá lógica para guardar la lista en MySql
-        // try {
-        //     await saveListToDB(newList); // lógica de guardar en la base
-        //     setLists(prev => [...prev, newList]); // actualizar solo si guardó bien
-        // } catch (err) {
-        //     console.error("Error al guardar la lista:", err);
-        //     Alert.alert("Error", "No se pudo guardar la lista. Verificá tu conexión.");
-        // }
+        } catch (err) {
+            return { success: false, message: 'Error al guardar la lista: ' };
+        }
     }
 
-    const updateList = (id: number, updated: Partial<List>) => {
-        setLists(prevLists => prevLists.map(list => list.id === id ? { ...list, ...updated } : list));
-        //Acá lógica para actualizar la lista en MySql
-        // try {
-        //     await updateListInMySQL(id, updated); // lógica de update en base
-        //     setLists(prev =>
-        //         prev.map(list => list.id === id ? { ...list, ...updated } : list)
-        //     );
-        // } catch (err) {
-        //     console.error("Error al actualizar la lista:", err);
-        //     Alert.alert("Error", "No se pudo actualizar la lista.");
-        // }
-
-        console.log('la lista fue editada. El id del evento de esta lista es: ' + getListById(id)?.idEventCalendar)
+    const updateList = async (id: number, updated: Partial<List>): Promise<Result> => {
+        try {
+            // await updateListInDB(id, updated);
+            setLists(prevLists => prevLists.map(list => list.id === id ? { ...list, ...updated } : list));
+            return { success: true };
+        } catch (err) {
+            return { success: false, message: 'Error al actualizar la lista: ' + err };
+        }
     }
 
-    const deleteList = (id: number) => {
-        setLists(prevLists => prevLists.filter(list => list.id !== id));
-
-        //Acá lógica para eliminar la lista    
-        // try {
-        //     await deleteListFromMySQL(id); // lógica de delete
-        //     setLists(prev => prev.filter(list => list.id !== id));
-        // } catch (err) {
-        //     console.error("Error al eliminar la lista:", err);
-        //     Alert.alert("Error", "No se pudo eliminar la lista.");
-        // } 
+    const deleteList = async (id: number): Promise<Result> => {
+        try {
+            // await deleteListFromDB(id);
+            setLists(prevLists => prevLists.filter(list => list.id !== id));
+            return { success: true };
+        } catch (err) {
+            return { success: false, message: 'Error al eliminar la lista: ' + err };
+        }
     }
 
-    const getListById = (id: number) =>{
+    const getListById = (id: number) => {
         return lists.find(list => list.id === id);
-    } 
+    }
 
     const contextValue = useMemo(() => ({
         lists,

@@ -1,16 +1,16 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect } from "react";
 import { StyleSheet, View, } from 'react-native'
 import { globalStyles } from "../../styles/globalStyles";
 import { useCreateItem } from "../../context/items/CreateItemContext";
 import { useTheme } from "../../context/ThemeContext";
 import { categoryItemName, Item, List } from "../../types/types";
+import { useDatesSchedule } from "../../hooks/calendar/useDateScheduler";
+import { useDateRangeValidation } from "../../hooks/calendar/useDateRangeValidation";
 import StyledText from "../styledComponets/StyledText";
 import ParticipantsList from "../participants/ParticipantsList";
 import OptionsListLayout from "../OptionsListLayout";
 import DateSelector from "../DateSelector";
 import StyledInput from "../styledComponets/StyledInput";
-import { useDatesSchedule } from "../../hooks/useDateScheduler";
-import { useDateRangeValidation } from "../../hooks/useDateRangeValidation";
 
 type ItemFormProps = {
     type: 'create' | 'edit';
@@ -78,7 +78,7 @@ const ItemForm: React.FC<ItemFormProps> = ({ type, list, item }) => {
             </StyledText>
             <View style={gStyles.itemForm}>
                 <StyledText>Nombre</StyledText>
-                <StyledInput value={itemData.name || ""} onChangeText={text => handleChange("name", text)} placeholder={`Nuevo ${item}`} />
+                <StyledInput value={itemData.name || ""} onChangeText={text => handleChange("name", text)} placeholder={`Nuevo ${categoryItemName[list.category]}`} />
             </View>
             <View style={gStyles.itemForm}>
                 <StyledText>Subcategoría</StyledText>

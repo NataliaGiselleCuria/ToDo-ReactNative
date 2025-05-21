@@ -1,14 +1,15 @@
 import { View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useDateRangeValidation } from '../../hooks/useDateRangeValidation';
+import { useDateRangeValidation } from '../../hooks/calendar/useDateRangeValidation';
 import { globalStyles } from '../../styles/globalStyles';
 import { useTheme } from '../../context/ThemeContext';
-import { useDatesSchedule } from '../../hooks/useDateScheduler';
+import { useDatesSchedule } from '../../hooks/calendar/useDateScheduler';
 import { CategoriesList } from '../../types/types';
 import StyledInput from '../styledComponets/StyledInput';
 import StyledText from '../styledComponets/StyledText';
 import DateSelector from '../DateSelector';
 import OptionsListLayout from '../OptionsListLayout';
+
 
 type StepOneProps = {
   onChange: (data:

@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, View, BackHandler, KeyboardAvoidingView, Platform } from 'react-native'
-import { useFocusEffect } from '@react-navigation/native'
-import { useCalendarPermission } from '../../hooks/useCalendarPermissions'
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native'
 import { useCreateList } from '../../context/lists/CreateListContext'
 import { useListContext } from '../../context/lists/ListContext'
 import { useTheme } from '../../context/ThemeContext';
@@ -10,6 +8,8 @@ import { globalStyles } from '../../styles/globalStyles'
 import { CategoriesList, List, PermissionsOptions } from '../../types/types'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useCancelToHome } from '../../hooks/useCancelToHome';
+import { useCalendarIntegration } from '../../hooks/calendar/useCalendarIntegration'
+import { useAlert } from '../../hooks/calendar/useAlert';
 import LinearGradient from 'react-native-linear-gradient';
 import CancelCreateButton from '../../components/list/CancelCreateButton'
 import ButtonBack from '../../components/ButtonBack'
@@ -18,20 +18,17 @@ import CreateListButton from '../../components/list/CreateListButton'
 import FormStepOne from '../../components/list/FormStepOne'
 import FormStepTwo from '../../components/list/FormStepTwo'
 import usePreventGoBack from '../../hooks/usePreventGoBack'
-import StyledAlert from '../../components/styledComponets/StyledAlert'
+import StyledAlert from '../../components/styledComponets/StyledAlert';
 
 const CreateListScreen = () => {
-
    const { theme, modalCount, decrementModalCount } = useTheme();
    const gStyles = globalStyles(theme);
    const cancelToHome = useCancelToHome();
    const { updateListData, listData, resetListData } = useCreateList();
+   const { alertVisible, alertMessage, alertType, showAlert, hideAlert } = useAlert();
    const { addList } = useListContext();
    const [step, setStep] = useState(1);
-   const { openPermissionModal, CalendarPermissionModal } = useCalendarPermission();
-   const [alertVisible, setAlertVisible] = React.useState(false);
-   const [alertMessage, setAlertMessage] = useState('');
-   const [alertType, setAlertType] = useState<'Éxito' | 'Error'>('Éxito');
+   const { executeCalendarAction, CalendarAlerts, CalendarPermissionModal } = useCalendarIntegration();
 
    usePreventGoBack();
 
@@ -59,33 +56,26 @@ const CreateListScreen = () => {
       updateListData(data);
    };
 
-   //Botón next según step
    const handleNext = () => {
       if (step === 1) {
          setStep(step + 1);
       } else {
          listData.startDate === undefined && (listData.startDate = new Date());
 
-         openPermissionModal(
-            { ...listData },
-            (success, newEventId) => {
+         executeCalendarAction({
+            data: { ...listData as List },
+            action: 'add',
+            onSuccess: (newEventId) => {
                AddNewList(newEventId);
                resetListData();
                decrementModalCount();
                cancelToHome();
-
-               if (!success) {
-                  setAlertMessage('La lista fue creada, pero no se pudo añadir el evento al calendario.');
-                  setAlertType('Error');
-                  setAlertVisible(true);
-               }
             },
-            'add'
-         );
+         });
       }
    };
 
-   const AddNewList = (idEventCalendar?: string) => {
+   const AddNewList = async (idEventCalendar?: string) => {
       const newList = {
          ...listData,
          id: Date.now(),
@@ -96,7 +86,12 @@ const CreateListScreen = () => {
       };
 
       updateListData(newList);
-      addList(newList as any);
+      const result = await addList(newList as any);
+
+      if (!result) {
+         showAlert('No se pudo guardar la lista', 'Error');
+         setTimeout(() => hideAlert(), 1500);
+      }
    };
 
    return (
@@ -144,12 +139,12 @@ const CreateListScreen = () => {
             <CreateListButton onPress={handleNext} title={step === 2 ? "CREAR LISTA" : "SIGUIENTE"} />
          </LinearGradient>
          <CalendarPermissionModal />
+         <CalendarAlerts />
          <StyledAlert
             visible={alertVisible}
-            onClose={() => setAlertVisible(!alertVisible)}
+            onClose={hideAlert}
             title={alertType}
             message={alertMessage}
-            buttons={[{ text: 'Ok', onPress: () => setAlertVisible(!alertVisible) }]}
          />
          {modalCount > 0 && <View style={gStyles.modalBack}></View>}
       </KeyboardAvoidingView>

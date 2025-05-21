@@ -3,7 +3,8 @@ import React, { useState } from 'react'
 import StyledContainer from '../components/styledComponets/StyledContainer'
 import { Calendar } from 'react-native-calendars';
 import { useListContext } from '../context/lists/ListContext';
-import { FilterOptions, useMarkedDates } from '../hooks/useMarkedDates';
+import { FilterOptions, useMarkedDates } from '../hooks/calendar/useMarkedDates';
+
 
 const CalendarScreen = () => {
   const { lists } = useListContext();
@@ -16,11 +17,11 @@ const CalendarScreen = () => {
     const selectedStr = selected;
     const startStr = new Date(start).toISOString().split('T')[0];
     const endStr = end ? new Date(end).toISOString().split('T')[0] : null;
-  
+
     if (endStr) {
       return selectedStr >= startStr && selectedStr <= endStr;
     }
-  
+
     return selectedStr === startStr;
   };
 
@@ -35,25 +36,25 @@ const CalendarScreen = () => {
         <View style={{ marginTop: 20 }}>
           <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Eventos del {selectedDay}:</Text>
           {lists
-  .filter(list => isSelectedDay(list.startDate, list.endDate, selectedDay))
-  .map((list, index) => (
-    <View
-      key={index}
-      style={{
-        padding: 10,
-        backgroundColor: '#fff',
-        marginVertical: 5,
-        borderRadius: 5,
-      }}
-    >
-      <Text style={{ fontWeight: 'bold' }}>{list.name}</Text>
-      <Text>
-        Desde{' '}
-        {list.startDate?.toLocaleDateString('es-AR')} hasta{' '}
-        {list.endDate?.toLocaleDateString('es-AR')}
-      </Text>
-    </View>
-  ))}
+            .filter(list => isSelectedDay(list.startDate, list.endDate, selectedDay))
+            .map((list, index) => (
+              <View
+                key={index}
+                style={{
+                  padding: 10,
+                  backgroundColor: '#fff',
+                  marginVertical: 5,
+                  borderRadius: 5,
+                }}
+              >
+                <Text style={{ fontWeight: 'bold' }}>{list.name}</Text>
+                <Text>
+                  Desde{' '}
+                  {list.startDate?.toLocaleDateString('es-AR')} hasta{' '}
+                  {list.endDate?.toLocaleDateString('es-AR')}
+                </Text>
+              </View>
+            ))}
         </View>
       )}
     </StyledContainer>

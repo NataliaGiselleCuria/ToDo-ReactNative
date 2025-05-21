@@ -2,10 +2,12 @@ import React, { createContext, useCallback, useContext, useMemo } from "react";
 import { Item } from "../../types/types";
 import { useListContext } from "../lists/ListContext";
 
+type Result = { success: boolean; message?: string };
+
 interface ListContextType {
-    addItem: (idList: number, newItem: Item) => void;
-    updateItem: (idList: number, id: number, updated: Partial<Item>) => void;
-    deleteItem: (idList: number, id: number) => void;
+    addItem: (idList: number, newItem: Item) => Promise<Result>;
+    updateItem: (idList: number, id: number, updated: Partial<Item>) => Promise<Result>;
+    deleteItem: (idList: number, id: number) => Promise<Result>;
     getItemById: (isList: number, id: number) => Item | undefined;
 }
 
@@ -14,34 +16,52 @@ const ItemContext = createContext<ListContextType | undefined>(undefined);
 export const ItemProvider = ({ children }: { children: React.ReactNode }) => {
     const { getListById, updateList, lists } = useListContext();
 
-    const addItem = (idList: number, newItem: Item) => {
+    const addItem = async (idList: number, newItem: Item): Promise<Result> => {
         const list = getListById(idList);
-        if (!list) return;
+        if (!list) return { success: false, message: 'No se encontró la lista para agregar el ítem' };
 
         const updatedItems = [...list.items, newItem];
-        updateList(idList, { items: updatedItems });
+
+        const result = await updateList(idList, { items: updatedItems });
+
+        if (!result.success) {
+            return { success: false, message: 'Error al agregar el ítem: ' + result.message }
+        } else {
+            return { success: true }
+        }
     };
 
-    const updateItem = (idList: number, id: number, updated: Partial<Item>) => {
+    const updateItem = async (idList: number, id: number, updated: Partial<Item>): Promise<Result> => {
         const list = getListById(idList);
-        if (!list) return;
+        if (!list) return { success: false, message: 'No se encontró la lista para agregar el ítem' };
 
         const updatedItems = list.items.map(item =>
             item.id === id ? { ...item, ...updated } : item
         );
 
-        updateList(idList, { items: updatedItems });
+        const result = await updateList(idList, { items: updatedItems });
 
+        if (!result.success) {
+            return { success: false, message: 'Error al actualizar el ítem: ' + result.message }
+        } else {
+            return { success: true }
+        }
     }
 
-    const deleteItem = (idList: number, id: number) => {
+    const deleteItem = async (idList: number, id: number): Promise<Result> => {
         const list = getListById(idList);
-        if (!list) return;
+         if (!list) return { success: false, message: 'No se encontró la lista para agregar el ítem' };
 
         const updatedItems = list.items.filter(item => item.id !== id);
         const updatedList = { ...list, items: updatedItems };
 
-        updateList(idList, updatedList);
+        const result = await  updateList(idList, updatedList);
+       
+         if (!result.success) {
+            return { success: false, message: 'Error al actualizar el ítem: ' + result.message }
+        } else {
+            return { success: true }
+        }
 
     }
 

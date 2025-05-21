@@ -1,6 +1,6 @@
-import { BackHandler, StyleSheet, TouchableOpacity, View, } from 'react-native'
+import { StyleSheet, TouchableOpacity, View, } from 'react-native'
 import React, { useMemo, useState } from 'react'
-import { RouteProp, useFocusEffect, useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../types/navigationTypes';
 import { useItemContext } from '../../context/items/ItemContext';
@@ -34,6 +34,8 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
     const { getItemById } = useItemContext();
     const { item } = route.params;
 
+    usePreventGoBack();
+
     const listData = useMemo(() => {
         return getListById(item.idList);
     }, [lists, item.idList]);
@@ -55,8 +57,6 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
     const handleEdit = () => {
         listData && itemData && navigation.navigate('EditItem', { list: listData, item: itemData })
     }
-
-    usePreventGoBack();
 
     return (
         <StyledContainerView

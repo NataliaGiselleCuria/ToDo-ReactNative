@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Modal, View, Text, Button, Alert } from 'react-native';
-import { addToSystemCalendar, editCalendarEvent, deleteCalendarEvent } from '../utils/calendarUtils';
-import { useTheme } from '../context/ThemeContext';
-import { globalStyles } from '../styles/globalStyles';
-import { combineDateAndTime } from '../utils/dateUtils';
-import { CalendarData, EventConfigDates } from '../types/types';
-import StyledAlert from '../components/styledComponets/StyledAlert';
+import { addToSystemCalendar, editCalendarEvent, deleteCalendarEvent } from '../../utils/calendarUtils';
+import { useTheme } from '../../context/ThemeContext';
+import { globalStyles } from '../../styles/globalStyles';
+import { combineDateAndTime } from '../../utils/dateUtils';
+import { CalendarData, EventConfigDates } from '../../types/types';
+import StyledAlert from '../../components/styledComponets/StyledAlert';
 
 export const useCalendarPermission = () => {
    const { theme, incrementModalCount, decrementModalCount } = useTheme();
@@ -17,7 +16,7 @@ export const useCalendarPermission = () => {
 
    const openPermissionModal = (
       data: any,
-      callback: (success: boolean, newEventId?: string) => void,
+      callback: (success: boolean, newEventId?: string,) => void,
       mode: 'add' | 'edit' | 'delete',
    ) => {
       setCalendarData(data);
