@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
 import { globalStyles } from '../../styles/globalStyles';
 import Modal from 'react-native-modal';
@@ -11,9 +11,11 @@ type Props = {
    onClose: () => void;
    children: React.ReactNode;
    scrollView?: boolean
+   gradient?:boolean
+   styleChildren?: ViewStyle;
 };
 
-export const StyledModal = ({ visible, onSave, onClose, children, scrollView = true }: Props) => {
+export const StyledModal = ({ visible, onSave, onClose, children, scrollView = true, gradient= true, styleChildren}: Props) => {
    const scrollViewRef = useRef<ScrollView>(null);
    const { theme } = useTheme();
    const gStyles = globalStyles(theme);
@@ -48,24 +50,24 @@ export const StyledModal = ({ visible, onSave, onClose, children, scrollView = t
                            justifyContent: 'flex-start',
                         }}
                      >
-                        <View style={styles.containerChildren}>
+                        <View style={[styles.containerChildren, styleChildren]}>
                            {children}
                         </View>
-                        {onSave && (
+                      
                            <ConfirmCancelButtons handleSave={onSave} handleCancel={onClose} />
-                        )}
+                       
                      </ScrollView>
                   )
                   : (
                      <View
                         style={[gStyles.modalContent, { flexGrow: 1 }]}
                      >
-                        <View style={styles.containerChildren}>
+                        <View style={[styles.containerChildren, styleChildren]}>
                            {children}
                         </View>
-                        {onSave && (
-                           <ConfirmCancelButtons handleSave={onSave} handleCancel={onClose} />
-                        )}
+
+                        <ConfirmCancelButtons handleSave={onSave} handleCancel={onClose} gradient={gradient} />
+
                      </View>
                   )
                }

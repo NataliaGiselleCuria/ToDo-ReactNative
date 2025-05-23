@@ -71,10 +71,13 @@ export interface Note {
     id: number;
     user: User
     date: Date
-    text?: string,
-    image?: string,
-    audio?: string
+    content: NoteItem[];
 }
+
+export type NoteItem = {
+   type: 'text' | 'audio' | 'image';
+   value: string;
+};
 
 export interface HistoryChanges {
     id: number;

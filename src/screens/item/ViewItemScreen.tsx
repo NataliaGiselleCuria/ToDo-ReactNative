@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View, } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import React, { useMemo, useState } from 'react'
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -66,7 +66,6 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
             list={list}
         >
             <View style={[gStyles.rowBetween, { paddingHorizontal: 10 }]}>
-
                 <TouchableOpacity
                     onPress={() => itemData.record.length > 0 && setOpenRecords(true)}
                     style={[styles.button, gStyles.shadow, { backgroundColor: theme.colors.buttonColor }]}
@@ -79,7 +78,7 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => itemData.record.length > 0 && setOpenNotes(true)}
+                    onPress={() => itemData.note && itemData.note.length > 0 && setOpenNotes(true)}
                     style={[styles.button, gStyles.shadow, { backgroundColor: theme.colors.buttonColor }]}
                 >
                     <StyledIcon src={require('../../assets/icons-general/record.png')} width='xl' height='xl' type='button' />
@@ -93,18 +92,20 @@ const ViewItemScreen: React.FC<Props> = ({ route }) => {
                 <AddNoteModal
                     item={itemData}
                     visible={addNote}
-                    onClose={() => { setAddNote(false) }} />
+                    onClose={() => { setAddNote(false); decrementModalCount() }} />
             )}
-            {itemData.record && (
+            {/* {itemData.record && (
                 <ItemModal
                     visible={openRecords}
-                    show={itemData.record}
+                    data={itemData}}
+                    show={'history'}
                     onClose={() => { setOpenRecords(false); decrementModalCount() }} />
-            )}
+            )} */}
             {itemData.note && (
                 <ItemModal
                     visible={openNotes}
-                    show={itemData.note}
+                    data={itemData}
+                    show='note'
                     onClose={() => { setOpenNotes(false); decrementModalCount() }} />
             )}
 

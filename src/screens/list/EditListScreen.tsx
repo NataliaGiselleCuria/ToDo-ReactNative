@@ -93,6 +93,11 @@ const EditListScreen: React.FC<Props> = ({ route }) => {
          deleteList(formData.id);
          if (formData.idEventCalendar) {
             deleteCalendarEvent(formData.idEventCalendar);
+
+            formData.items.forEach(item => {
+               item.idEventCalendar && deleteCalendarEvent(item.idEventCalendar);            
+            })
+
          }
 
          decrementModalCount();
@@ -142,7 +147,7 @@ const EditListScreen: React.FC<Props> = ({ route }) => {
             visible={deleteConfirmationVisible}
             onClose={cancelDelete}
             title="¿Eliminar lista?"
-            message="Esta acción no se puede deshacer."
+            message={"Se perderán todos los items de la lista.\nEsta acción no se puede deshacer."}
             buttons={[
                { text: 'Cancelar', onPress: cancelDelete, style: { backgroundColor: 'gray' } },
                { text: 'Eliminar', onPress: confirmDelete, style: { backgroundColor: 'red' } },

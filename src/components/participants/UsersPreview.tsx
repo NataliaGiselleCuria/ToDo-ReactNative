@@ -10,9 +10,10 @@ type Props = {
    style?: StyleProp<ViewStyle>;
    userInfo?: boolean;
    size?: 'sm' | 'normal'
+   width?: number;
 };
 
-const UsersPreview = ({ user, userInfo = true, style, size = 'normal' }: Props) => {
+const UsersPreview = ({ user, userInfo = true, style, size = 'normal', width=120 }: Props) => {
 
    const { theme } = useTheme();
    const gStyles = globalStyles(theme);
@@ -23,7 +24,7 @@ const UsersPreview = ({ user, userInfo = true, style, size = 'normal' }: Props) 
    };
 
    return (
-      <View style={[styles.container, style]}>
+      <View style={[styles.container, style, {width: width}]}>
          <Image
             source={user.avatar ? user.avatar : require('../../assets/avatars/ghost.png')}
             style={[

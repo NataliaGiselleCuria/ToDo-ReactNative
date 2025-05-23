@@ -76,7 +76,9 @@ const EditItemScreen: React.FC<Props> = ({ route }) => {
    const confirmDelete = () => {
       if (list && itemData.id) {
          deleteItem(list.id, itemData.id);
+         console.log('item idEvent: ' + itemData.idEventCalendar)
          if (itemData.idEventCalendar) {
+            console.log('eliminando evento item id: ' + itemData.idEventCalendar)
             deleteCalendarEvent(itemData.idEventCalendar);
          }
          handleCancel();
